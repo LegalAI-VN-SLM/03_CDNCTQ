@@ -76,36 +76,7 @@
 
 ---
 
-### **Chapter 4 — Experiments**
 
-**4.1 Datasets**
-- 4.1.1 Training Datasets
-- 4.1.2 Evaluation and Test Sets
-- 4.1.3 Direct Preference Optimization Preference Data
-
-**4.2 Experimental Setup**
-- 4.2.1 Teacher and Student Models
-- 4.2.2 Configuration Space and Hyperparameters
-- 4.2.3 Hardware and Framework
-
-**4.3 Results and Analysis**
-- 4.3.1 Impact of Hyperparameter Tuning
-- 4.3.2 Low-Rank Adaptation vs. Quantized Low-Rank Adaptation
-- 4.3.3 Model Size Comparison: 0.6 Billion vs. 1.7 Billion Parameters
-- 4.3.4 Supervised Fine-Tuning vs. Offline Knowledge Distillation
-- 4.3.5 Offline vs. On-Policy Knowledge Distillation
-- 4.3.6 Direct Preference Optimization Alignment Impact
-- 4.3.7 Generalization on the Public Test Set
-
-**4.4 Ablation Study**
-- 4.4.1 Quantized Low-Rank Adaptation vs. Low-Rank Adaptation
-- 4.4.2 Rule-Based vs. Large Language Model Judge
-
-**4.5 Qualitative Analysis**
-- 4.5.1 Nine-Sample Inference Comparison
-- 4.5.2 Error Patterns Before and After Distillation
-
----
 
 ### **Chapter 5 — Conclusion and Future Work**
 
