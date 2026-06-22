@@ -1,8 +1,6 @@
 ---
-created: <% tp.file.creation_date("YYYY-MM-DD HH:mm:ss") %>
-updated:
-  - 2025-11-24T13:52:00+07:00
-  - <% tp.file.last_modified_date("YYYY-MM-DD HH:mm:ss") %>
+created: 2026-06-18T17:15:00
+updated: 2026-06-18T13:52:00
 dg-publish:
 dg-home:
 tags:

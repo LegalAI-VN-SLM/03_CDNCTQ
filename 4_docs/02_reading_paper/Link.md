@@ -1,0 +1,2 @@
+- [zzz47zzz/awesome-lifelong-learning-methods-for-llm: [ACM Computing Surveys 2025] This repository collects awesome survey, resource, and paper for Lifelong Learning with Large Language Models. (Updated Regularly)](https://github.com/zzz47zzz/awesome-lifelong-learning-methods-for-llm)
+- 
