@@ -19,7 +19,7 @@ Các viết cite.
 
 --
 đọc cite ở đây 
-E:\DoCode\1 VN-Legal-AI\01_Report_CD1_DistillationLaw\references.bib
+E:\DoCode\1 VN-Legal-AI\03_CDNCTQ\references_core.bib
 
 ---
 

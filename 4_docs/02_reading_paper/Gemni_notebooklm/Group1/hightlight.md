@@ -1,3 +1,7 @@
+---
+updated:
+  - 2026-06-23T22:06:10+07:00
+---
 # Group 1 — Highlights: Figures, Tables, and Key Taxonomies
 
 **Group:** Surveys & Overviews (4 papers)  
@@ -40,15 +44,15 @@ Facts        New Domains      Incremental     Adapting  to Safety     Preference
 ### Table 2: Loại Thông Tin Cập Nhật Theo Giai Đoạn (Reconstructed)
 *(○: Có áp dụng tốt nhất, ×: Không phù hợp/Không áp dụng)*
 
-| Loại tri thức / Thông tin | Pre-training (CPT) | Instruction-tuning (CIT) | Alignment (CA) |
-| :--- | :---: | :---: | :---: |
-| **Fact (Sự kiện)** | ○ | × | × |
-| **Domain (Miền tri thức)** | ○ | ○ | × |
-| **Language (Ngôn ngữ mới)**| ○ | × | × |
-| **Task (Tác vụ mới)** | × | ○ | × |
-| **Skill (Kỹ năng/Công cụ)**| × | ○ | × |
-| **Value (Chuẩn mực đạo đức)**| × | × | ○ |
-| **Preference (Sở thích)** | × | × | ○ |
+| Loại tri thức / Thông tin     | Pre-training (CPT) | Instruction-tuning (CIT) | Alignment (CA) |
+| :---------------------------- | :----------------: | :----------------------: | :------------: |
+| **Fact (Sự kiện)**            |         ○          |            ×             |       ×        |
+| **Domain (Miền tri thức)**    |         ○          |            ○             |       ×        |
+| **Language (Ngôn ngữ mới)**   |         ○          |            ×             |       ×        |
+| **Task (Tác vụ mới)**         |         ×          |            ○             |       ×        |
+| **Skill (Kỹ năng/Công cụ)**   |         ×          |            ○             |       ×        |
+| **Value (Chuẩn mực đạo đức)** |         ×          |            ×             |       ○        |
+| **Preference (Sở thích)**     |         ×          |            ×             |       ○        |
 
 ---
 
