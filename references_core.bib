@@ -335,243 +335,92 @@
   url           = {https://arxiv.org/abs/2301.12314}
 }
 
-% ---- 5. Replay, instruction-CL & synthetic rehearsal (7) ----------
-
-@misc{huang2024mitigatingcatastrophicforgettinglarge,
-  title         = {Mitigating Catastrophic Forgetting in Large Language Models with Self-Synthesized Rehearsal},
-  author        = {Huang, Jianheng and Cui, Leyang and Wang, Ante and Yang, Chengyi and Liao, Xinting and Song, Linfeng and Yao, Junfeng and Su, Jinsong},
-  year          = {2024},
-  eprint        = {2403.01244},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.CL},
-  note          = {SSR; ACL 2024 main, long paper},
-  url           = {https://arxiv.org/abs/2403.01244}
+@Article{repec:axf:aidtaa:v:3:y:2026:i:1:p:52-61,
+journal={Artificial Intelligence and Digital Technology},
+author={Zhang, Xinlan},
+title={Mitigating Catastrophic Forgetting in Fine-Tuned Large Language Models: An Experimental Study of LoRA and O-LoRA},
+year={2026},
+month={None},
+pages={52-61},
+volume={3},
+number={1},
+abstract={Large language models (LLMs) have become a hot topic in AI, and since the GPT series they have achieved remarkable success across many domains. However, directly using a general-purpose model often fails to meet the needs of specific applications, which motivates fine-tuning with domain-specific data. Nevertheless, parameter-efficient fine-tuning (PEFT) methods such as LoRA may perform poorly on certain algorithmic benchmarks, raising concerns about cat-astrophic forgetting. In this paper, we conduct extensive experiments to confirm this phenomenon and investigate O-LoRA as a mitigation strategy. Results show that O-LoRA can effectively alleviate catastrophic forgetting under continual instruction fine-tuning, but its effectiveness can be sensitive to hyperparameters on some datasets. Overall, O-LoRA provides a practical direction for mitigating catastrophic forgetting during continual fine-tuning of LLMs.},
+keywords={large language models; catastrophic forgetting; parameter-efficient fine-tuning; LoRA; O-LoRA},
+doi={None},
+url={https://ideas.repec.org/a/axf/aidtaa/v3y2026i1p52-61.html},
 }
 
-@misc{he2024seekrselectiveattentionguidedknowledge,
-  title         = {SEEKR: Selective Attention-Guided Knowledge Retention for Continual Learning of Large Language Models},
-  author        = {He, Jinghan and Guo, Haiyun and Zhu, Kuan and Zhao, Zihan and Tang, Ming and Wang, Jinqiao},
-  year          = {2024},
-  eprint        = {2411.06171},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.CL},
-  note          = {EMNLP 2024},
-  url           = {https://arxiv.org/abs/2411.06171}
+@misc{nguyen2025vlqacomprehensivelargehighquality,
+      title={VLQA: The First Comprehensive, Large, and High-Quality Vietnamese Dataset for Legal Question Answering}, 
+      author={Tan-Minh Nguyen and Hoang-Trung Nguyen and Trong-Khoi Dao and Xuan-Hieu Phan and Ha-Thanh Nguyen and Thi-Hai-Yen Vuong},
+      year={2025},
+      eprint={2507.19995},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2507.19995}, 
 }
-
-@inproceedings{akiba2025sers,
-  title     = {Self-Evolving Pseudo-Rehearsal for Catastrophic Forgetting with Task Similarity},
-  author    = {Akiba, Takuya},
-  booktitle = {Proceedings of NeurIPS},
-  year      = {2025},
-  note      = {NeurIPS 2025 poster; full author list unverified},
-  url       = {https://neurips.cc/virtual/2025/poster/116466}
+@misc{su2026retrievablegradientscontinualposttraining,
+      title={Retrievable Gradients: Continual Post-Training Without Cumulative Weight Drift}, 
+      author={Weihang Su and Jiacheng Kang and Jingyan Xu and Qingyao Ai and Jianming Long and Hanwen Zhang and Bangde Du and Xinyuan Cao and Min Zhang and Yiqun Liu},
+      year={2026},
+      eprint={2606.15734},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2606.15734}, 
 }
+@article{Sumida_2025,
+   title={Enhancing Long-term RAG Chatbots with Psychological Models of Memory Importance and Forgetting},
+   volume={16},
+   ISSN={2152-9620},
+   url={http://dx.doi.org/10.5210/dad.2025.203},
+   DOI={10.5210/dad.2025.203},
+   number={2},
+   journal={Dialogue &amp; Discourse},
+   publisher={University of Illinois Libraries},
+   author={Sumida, Ryuichi and Inoue, Koji and Kawahara, Tatsuya},
+   year={2025},
+   month=Dec, pages={74–110} }
 
-@inproceedings{wang-etal-2024-inscl,
-  title     = {InsCL: A Data-efficient Continual Learning Paradigm for Fine-tuning Large Language Models with Instructions},
-  author    = {Wang, Yifan and Liu, Yafei and Shi, Chufan and Li, Haoling and Chen, Chen and Lu, Haonan and Yang, Yujiu},
-  editor    = {Duh, Kevin and Gomez, Helena and Bethard, Steven},
-  booktitle = {Proceedings of the 2024 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)},
-  month     = jun,
-  year      = {2024},
-  address   = {Mexico City, Mexico},
-  publisher = {Association for Computational Linguistics},
-  pages     = {663--677},
-  doi       = {10.18653/v1/2024.naacl-long.37},
-  url       = {https://aclanthology.org/2024.naacl-long.37/}
+@ARTICLE{11328884,
+author={Zheng, Junhao and Shi, Chengming and Cai, Xidi and Li, Qiuke and Zhang, Duzhen and Li, Chenxing and Yu, Dong and Ma, Qianli},
+journal={ IEEE Transactions on Pattern Analysis \& Machine Intelligence },
+title={{ Lifelong Learning of Large Language Model Based Agents: A Roadmap }},
+year={2026},
+volume={48},
+number={05},
+ISSN={1939-3539},
+pages={5552-5571},
+abstract={ Lifelong learning, also known as continual or incremental learning, is a crucial component for advancing Artificial General Intelligence (AGI) by enabling systems to continuously adapt in dynamic environments. While large language models (LLMs) have demonstrated impressive capabilities in natural language processing, existing LLM agents are typically designed for static systems and lack the ability to adapt over time in response to new challenges. This survey is the first to systematically summarize the potential techniques for incorporating lifelong learning into LLM-based agents. We categorize the core components of these agents into three modules: the perception module for multimodal input integration, the memory module for storing and retrieving evolving knowledge, and the action module for grounded interactions with the dynamic environment. We highlight how these pillars collectively enable continuous adaptation, mitigate catastrophic forgetting, and improve long-term performance. This survey provides a roadmap for researchers and practitioners working to develop lifelong learning capabilities in LLM agents, offering insights into emerging trends, evaluation metrics, and application scenarios. },
+keywords={Surveys;Artificial intelligence;Reviews;Artificial general intelligence;Training;Large language models;Learning systems;Learning (artificial intelligence);Benchmark testing;Privacy},
+doi={10.1109/TPAMI.2025.3650546},
+url = {https://doi.ieeecomputersociety.org/10.1109/TPAMI.2025.3650546},
+publisher={IEEE Computer Society},
+address={Los Alamitos, CA, USA},
+month=may}
+
+@misc{duong2026vilegalnlinaturallanguageinference,
+      title={ViLegalNLI: Natural Language Inference for Vietnamese Legal Texts}, 
+      author={Nhung Thi-Hong Duong and Mai Ngoc Ho and Tin Van Huynh and Kiet Van Nguyen},
+      year={2026},
+      eprint={2605.00116},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2605.00116}, 
 }
-
-@inproceedings{mishra-etal-2022-cross,
-  title     = {Cross-Task Generalization via Natural Language Crowdsourcing Instructions},
-  author    = {Mishra, Swaroop and Khashabi, Daniel and Baral, Chitta and Hajishirzi, Hannaneh},
-  editor    = {Muresan, Smaranda and Nakov, Preslav and Villavicencio, Aline},
-  booktitle = {Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
-  month     = may,
-  year      = {2022},
-  address   = {Dublin, Ireland},
-  publisher = {Association for Computational Linguistics},
-  pages     = {3470--3487},
-  doi       = {10.18653/v1/2022.acl-long.244},
-  url       = {https://aclanthology.org/2022.acl-long.244/}
-}
-
-@misc{xu2024magpiealignmentdatasynthesis,
-  title         = {Magpie: Alignment Data Synthesis from Scratch by Prompting Aligned LLMs with Nothing},
-  author        = {Zhangchen Xu and Fengqing Jiang and Luyao Niu and Yuntian Deng and Radha Poovendran and Yejin Choi and Bill Yuchen Lin},
-  year          = {2024},
-  eprint        = {2406.08464},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.CL},
-  note          = {ICLR 2025},
-  url           = {https://arxiv.org/abs/2406.08464}
-}
-
-@misc{wu2024llamaproprogressivellama,
-  title         = {LLaMA Pro: Progressive LLaMA with Block Expansion},
-  author        = {Chengyue Wu and Yukang Gan and Yixiao Ge and Zeyu Lu and Jiahao Wang and Ye Feng and Ying Shan and Ping Luo},
-  year          = {2024},
-  eprint        = {2401.02415},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.CL},
-  note          = {ACL 2024},
-  url           = {https://arxiv.org/abs/2401.02415}
-}
-
-% ---- 6. Model merging, knowledge editing & alignment (10) ---------
-
-@misc{ilharco2023editingmodelstaskarithmetic,
-  title         = {Editing Models with Task Arithmetic},
-  author        = {Gabriel Ilharco and Marco Tulio Ribeiro and Mitchell Wortsman and Suchin Gururangan and Ludwig Schmidt and Hannaneh Hajishirzi and Ali Farhadi},
-  year          = {2023},
-  eprint        = {2212.04089},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.LG},
-  note          = {ICLR 2023},
-  url           = {https://arxiv.org/abs/2212.04089}
-}
-
-@misc{yadav2023tiesmergingresolvinginterferencemerging,
-  title         = {TIES-Merging: Resolving Interference When Merging Models},
-  author        = {Prateek Yadav and Derek Tam and Leshem Choshen and Colin Raffel and Mohit Bansal},
-  year          = {2023},
-  eprint        = {2306.01708},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.LG},
-  note          = {NeurIPS 2023},
-  url           = {https://arxiv.org/abs/2306.01708}
-}
-
-@misc{yu2024languagemodelssupermario,
-  title         = {Language Models are Super Mario: Absorbing Abilities from Homologous Models as a Free Lunch},
-  author        = {Le Yu and Bowen Yu and Haiyang Yu and Fei Huang and Yongbin Li},
-  year          = {2024},
-  eprint        = {2311.03099},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.CL},
-  note          = {DARE; ICML 2024},
-  url           = {https://arxiv.org/abs/2311.03099}
-}
-
-@misc{wortsman2022modelsoupsaveragingweights,
-  title         = {Model soups: averaging weights of multiple fine-tuned models improves accuracy without increasing inference time},
-  author        = {Mitchell Wortsman and Gabriel Ilharco and Samir Yitzhak Gadre and Rebecca Roelofs and Raphael Gontijo-Lopes and Ari S. Morcos and Hongseok Namkoong and Ali Farhadi and Yair Carmon and Simon Kornblith and Ludwig Schmidt},
-  year          = {2022},
-  eprint        = {2203.05482},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.LG},
-  note          = {ICML 2022},
-  url           = {https://arxiv.org/abs/2203.05482}
-}
-
-@misc{matena2022mergingmodelsfisherweightedaveraging,
-  title         = {Merging Models with Fisher-Weighted Averaging},
-  author        = {Michael Matena and Colin Raffel},
-  year          = {2022},
-  eprint        = {2111.09832},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.LG},
-  note          = {NeurIPS 2022},
-  url           = {https://arxiv.org/abs/2111.09832}
-}
-
-@misc{meng2023locatingeditingfactualassociations,
-  title         = {Locating and Editing Factual Associations in GPT},
-  author        = {Kevin Meng and David Bau and Alex Andonian and Yonatan Belinkov},
-  year          = {2023},
-  eprint        = {2202.05262},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.CL},
-  note          = {ROME; NeurIPS 2022},
-  url           = {https://arxiv.org/abs/2202.05262}
-}
-
-@misc{meng2023masseditingmemorytransformer,
-  title         = {Mass-Editing Memory in a Transformer},
-  author        = {Kevin Meng and Arnab Sen Sharma and Alex Andonian and Yonatan Belinkov and David Bau},
-  year          = {2023},
-  eprint        = {2210.07229},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.CL},
-  note          = {MEMIT; ICLR 2023},
-  url           = {https://arxiv.org/abs/2210.07229}
-}
-
-@misc{fang2025alphaeditnullspaceconstrainedknowledge,
-  title         = {AlphaEdit: Null-Space Constrained Knowledge Editing for Language Models},
-  author        = {Junfeng Fang and Houcheng Jiang and Kun Wang and Yunshan Ma and Shi Jie and Xiang Wang and Xiangnan He and Tat-seng Chua},
-  year          = {2025},
-  eprint        = {2410.02355},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.CL},
-  note          = {ICLR 2025},
-  url           = {https://arxiv.org/abs/2410.02355}
-}
-
-@misc{rame2023rewardedsoupsparetooptimalalignment,
-  title         = {Rewarded soups: towards Pareto-optimal alignment by interpolating weights fine-tuned on diverse rewards},
-  author        = {Alexandre Ramé and Guillaume Couairon and Mustafa Shukor and Corentin Dancette and Jean-Baptiste Gaya and Laure Soulier and Matthieu Cord},
-  year          = {2023},
-  eprint        = {2306.04488},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.LG},
-  note          = {NeurIPS 2023},
-  url           = {https://arxiv.org/abs/2306.04488}
-}
-
-@misc{rame2024warmbenefitsweightaveraged,
-  title         = {WARM: On the Benefits of Weight Averaged Reward Models},
-  author        = {Alexandre Ramé and Nino Vieillard and Léonard Hussenot and Robert Dadashi and Geoffrey Cideron and Olivier Bachem and Johan Ferret},
-  year          = {2024},
-  eprint        = {2401.12187},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.LG},
-  note          = {ICML 2024},
-  url           = {https://arxiv.org/abs/2401.12187}
-}
-
-% ---- 7. CPT / CL advanced & MoE (3) -------------------------------
-
-@misc{zhu2024llamamoebuildingmixtureofexpertsllama,
-  title         = {LLaMA-MoE: Building Mixture-of-Experts from LLaMA with Continual Pre-training},
-  author        = {Tong Zhu and Xiaoye Qu and Daize Dong and Jiacheng Ruan and Jingqi Tong and Conghui He and Yu Cheng},
-  year          = {2024},
-  eprint        = {2406.16554},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.CL},
-  note          = {EMNLP 2024},
-  url           = {https://arxiv.org/abs/2406.16554}
-}
-
-@misc{chen2023lifelonglanguagepretrainingdistributionspecialized,
-  title         = {Lifelong Language Pretraining with Distribution-Specialized Experts},
-  author        = {Wuyang Chen and Yanqi Zhou and Nan Du and Yanping Huang and James Laudon and Zhifeng Chen and Claire Cui},
-  year          = {2023},
-  eprint        = {2305.12281},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.CL},
-  note          = {Lifelong-MoE; ICML 2023},
-  url           = {https://arxiv.org/abs/2305.12281}
-}
-
-@misc{parmar2024reusedontretrainrecipe,
-  title         = {Reuse, Don't Retrain: A Recipe for Continued Pretraining of Language Models},
-  author        = {Jupinder Parmar and Sanjev Satheesh and Mostofa Patwary and Mohammad Shoeybi and Bryan Catanzaro},
-  year          = {2024},
-  eprint        = {2407.07263},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.CL},
-  url           = {https://arxiv.org/abs/2407.07263}
-}
-
-% ---- 8. Law-domain (1) --------------------------------------------
-
-@misc{colombo2024saullm7bpioneeringlargelanguage,
-  title         = {SaulLM-7B: A pioneering Large Language Model for Law},
-  author        = {Pierre Colombo and Telmo Pessoa Pires and Malik Boudiaf and Dominic Culver and Rui Melo and Caio Corro and Andre F. T. Martins and Fabrizio Esposito and Vera Lúcia Raposo and Sofia Morgado and Michael Desa},
-  year          = {2024},
-  eprint        = {2403.03883},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.CL},
-  url           = {https://arxiv.org/abs/2403.03883}
+@inproceedings{le-etal-2025-overview,
+    title = "Overview of the {L}egal{SLM} Shared Task: Evaluating Legal Reasoning of {V}ietnamese Small Language Models",
+    author = "Le, Anh-Cuong  and
+      Duong, Trong-Chi  and
+      Nguyen, Viet-Ha  and
+      Le, Thang VQ",
+    editor = "Mai, Luong Chi  and
+      Huyen, Nguyen Thi Minh  and
+      Trang, Nguyen Thi Thu",
+    booktitle = "Proceedings of the 11th International Workshop on Vietnamese Language and Speech Processing",
+    month = oct,
+    year = "2025",
+    address = "Hanoi, Vietnam",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2025.vlsp-1.21/",
+    pages = "147--152"
 }

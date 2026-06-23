@@ -1,0 +1,37 @@
+1. VLegal-Bench (paper chính + benchmark multi-model)
+Paper	Dataset benchmark	Mức độ	Kết quả / số model
+VLegal-Bench: Cognitively Grounded Benchmark for Vietnamese Legal Reasoning of Large Language Models 
+VLegal-Bench (10,450 mẫu, 22 tasks, 5 levels) 
+Giới thiệu benchmark + đánh giá 24 mô hình (zero-shot, few-shot) 
+Top: CMC-AI-Legal-32B (6/22 tasks), domain-adapted LLMs vượt general LLMs ở tasks suy luận cao 
+Dataset: VLegal-Bench (public, Hugging Face: CMC-OPENAI/VLegal-Bench)
+
+Link: https://arxiv.org/abs/2512.14554
+
+2. VLQA (dataset tổng hợp + benchmark QA/retrieval)
+Paper	Dataset benchmark	Task
+VLQA: The First Comprehensive, Large, and High-Quality Vietnamese Dataset for Legal Question Answering 
+VLQA (comprehensive legal QA dataset) 
+Legal QA, retrieval, information retrieval
+Dataset: VLQA (public, DRILL benchmark xây trên VLQA)
+
+Link: https://arxiv.org/abs/2507.19995
+
+3. ViLegalNLI (dataset NLI + benchmark)
+Paper	Dataset benchmark	Task
+ViLegalNLI: Natural Language Inference for Vietnamese Legal Texts 
+ViLegalNLI (42,012 cặp premise–hypothesis) 
+Entailment, contradiction, neutral (NLI pháp lý)
+Dataset: ntphuc149/ViLegalNLI (Hugging Face) + đánh giá trên VLSP-NLI public test (150 mẫu)
+
+Link: https://arxiv.org/abs/2605.00116
+
+4. VLSP 2025 LegalSLM Shared Task (benchmark SLM pháp lý)
+Paper	Dataset benchmark	Số mẫu
+Overview of the LegalSLM Shared Task: Evaluating Legal Reasoning of Vietnamese Small Language Models 
+LegalSLM benchmark (1,950 mẫu) 
+Legal reasoning, court decision prediction, article prediction
+Dataset: Public test VLSP2025-LegalSML/Public-Test (Hugging Face)
+
+Link: https://aclanthology.org/2025.vlsp-1.21/
+

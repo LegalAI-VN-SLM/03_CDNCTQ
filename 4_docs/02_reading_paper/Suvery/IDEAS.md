@@ -1,5 +1,6 @@
 ---
 updated:
+  - 2026-06-23T16:51:58+07:00
   - 2026-06-20T15:38:18+07:00
 ---
 Dựa trên 4 bài survey toàn diện nhất về Continual Learning (CL - Học liên tục) cho Large Language Models (LLMs) và Generative AI (AI Tạo sinh) mà chúng ta đã phân tích, tôi sẽ giúp bạn tổng hợp lại toàn bộ bức tranh nghiên cứu dưới dạng **5 câu hỏi cốt lõi để phát hiện vấn đề nghiên cứu**, kèm theo góc nhìn "người đi trước đã làm gì".
