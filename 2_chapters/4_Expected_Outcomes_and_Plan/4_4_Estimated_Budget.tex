@@ -1,1 +1,40 @@
 \section{Estimated Budget}
+
+The estimated budget required to complete the 6-month research plan is structured under standard institutional categories, reflecting the hardware, data acquisition, personnel, and operational requirements of the project. The total projected cost is 1,250,000,000 VND (~$50,000$ USD). A detailed breakdown of the financial allocations is presented in Table~\ref{tab:estimated_budget}.
+
+\begin{table}[H]
+\centering
+\caption{Estimated Budget Breakdown for the 6-Month Research Project.}
+\label{tab:estimated_budget}
+\begin{tabularx}{\textwidth}{lXXr}
+\hline
+\textbf{Category} & \textbf{Description} & \textbf{Quantity / Rate} & \textbf{Cost (VND)} \\
+\hline
+\textbf{Personnel} & Principal Investigator (PI) & 6 months @ 25,000,000 VND/mo & 150,000,000 \\
+                   & Lead NLP Researcher & 6 months @ 40,000,000 VND/mo & 240,000,000 \\
+                   & Data Annotation Assistants (2) & 4 months @ 15,000,000 VND/mo each & 120,000,000 \\
+\hline
+\textbf{Compute \& Cloud} & GPU Server Rental (A100 instances) & 200 hours @ 80,000 VND/hour & 16,000,000 \\
+                         & Vector Database Host (Pinecone/Milvus) & 6 months @ 5,000,000 VND/mo & 30,000,000 \\
+                         & Local Development Station (GPU-equipped) & 1 Unit (RTX 4090 workstation) & 110,000,000 \\
+\hline
+\textbf{Data \& Operations} & Law Corpus License \& Cleaning Fees & Lump sum & 250,000,000 \\
+                            & Annotation Tooling \& QC Platform & Licenses & 40,000,000 \\
+                            & Legal Expert Validation Fees & 5 Experts @ 15,000,000 VND each & 75,000,000 \\
+\hline
+\textbf{Administrative} & Publication Fees & 2 IEEE Journal / Conference papers & 80,000,000 \\
+                        & Workspace, Travel, \& Communication & General operational costs & 39,000,000 \\
+                        & Institutional Indirect Costs (Overhead) & 8\% of direct research costs & 100,000,000 \\
+\hline
+\textbf{Total Budget} & & & \textbf{1,250,000,000} \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection{Justification of Cost Allocations}
+\begin{itemize}
+    \item \textbf{Personnel Costs:} Calculated based on standardized academic research rates in Vietnam. The PI coordinates the project and leads the system architecture design. The NLP researcher handles the development and implementation of WP1 and WP2, while the annotation assistants clean the legal raw text and tag the validity and citation metadata.
+    \item \textbf{Compute and Storage:} Offline vector indexing and dense bi-encoder models are computationally heavy. A local Workstation is acquired for initial model tuning and local indexing, while cloud A100 GPU instances are rented for heavy evaluation runs.
+    \item \textbf{Data Acquisition & Expert Validation:} Vietnamese laws must be compiled from official government portals. The budget accounts for crawling licensing and manual annotation cleaning. To guarantee metadata accuracy (GĐ1), legal experts are hired to validate a randomized evaluation subset.
+    \item \textbf{Administrative and Publication:} Supports the publication of two scientific papers in open-access conferences or journals and indirect institutional overheads.
+\end{itemize}

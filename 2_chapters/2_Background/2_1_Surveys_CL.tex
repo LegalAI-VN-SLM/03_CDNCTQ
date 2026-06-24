@@ -1,1 +1,26 @@
 \section{Surveys on Continual Learning for Large Language Models}
+
+In the era of rapid artificial intelligence advancements, maintaining and updating the knowledge of Large Language Models (LLMs) has emerged as a central challenge in machine learning. The field of Continual Learning (CL) for LLMs has significantly evolved from traditional encoder-based classification architectures to generative auto-regressive models \parencite{wu2024continuallearninglargelanguage, shi2024continuallearninglargelanguage}. Comprehensive surveys published between 2024 and 2026 have systematically organized the challenges and opportunities of CL in LLMs, demonstrating that continuous knowledge updating is indispensable due to the dynamic nature of real-world events and domain-specific knowledge bases \parencite{zheng2024lifelonglearninglargelanguage, guo2025continuallearninggenerativeai, zzz47zzz2025awesome}.
+
+\subsection{Boundaries Between Continual Learning, RAG, and Model Editing}
+To properly position this research, it is essential to delineate the conceptual boundaries among three primary paradigms of knowledge management in language models:
+\begin{enumerate}
+    \item \textbf{Continual Learning (CL):} Targets the deep integration of new knowledge directly into model parameters by optimizing weights over non-stationary data streams, aiming for robust generalization on future tasks \parencite{wu2024continuallearninglargelanguage}.
+    \item \textbf{Retrieval-Augmented Generation (RAG):} Leverages external, non-parametric knowledge sources to temporarily inject context during inference, without altering the model's pre-trained weights \parencite{11328884}.
+    \item \textbf{Model Editing:} Focuses on localized, rapid updates to specific factual connections (factual updates) without altering the model's general behaviors or other unrelated weights \parencite{guo2025continuallearninggenerativeai}.
+\end{enumerate}
+This distinction provides a solid justification for our proposed hybrid framework, which combines RAG for flexible, non-parametric knowledge retrieval and LoRA for parametric behavior adaptation, thereby neutralizing the catastrophic forgetting risks inherent in permanent parameter updates.
+
+\subsection{Taxonomy of Mitigating Catastrophic Forgetting}
+To overcome catastrophic forgetting—the severe degradation of historical knowledge when adapting to new distributions—surveys classify mitigation strategies into four main schools of thought \parencite{wu2024continuallearninglargelanguage, shi2024continuallearninglargelanguage}:
+\begin{itemize}
+    \item \textbf{Rehearsal/Replay:} Stores a subset of historical data in a memory buffer and re-introduces it during the training of new tasks to anchor the weights.
+    \item \textbf{Regularization:} Applies mathematical constraints to the loss function to penalize modifications to critical parameters of prior tasks.
+    \item \textbf{Architecture/PEFT:} Isolates parameter update spaces using auxiliary adapters or modules (e.g., LoRA) to protect the base model.
+    \item \textbf{External Memory:} Keeps knowledge external to the network and retrieves it dynamically (the fundamental mechanism of RAG).
+\end{itemize}
+
+\subsection{Transition to Lifelong Agents}
+Recent surveys have expanded CL from static models to lifelong learning agents operating under a Perception-Memory-Action framework \parencite{11328884}. Within this architecture, the memory module is stratified into Working, Episodic, Semantic, and Parametric memory \parencite{11328884}. Representing RAG as a form of non-parametric semantic memory enables the design of selective forgetting algorithms based on temporal validity and legal centrality.
+
+Despite these advancements, surveys highlight two critical research gaps: (i) a lack of CL methodologies optimized for low-resource languages such as Vietnamese, and (ii) a lack of standardized quantitative benchmarks to measure reasoning degradation in lifelong agents. These gaps motivate the development of our proposed framework for the Vietnamese legal domain.

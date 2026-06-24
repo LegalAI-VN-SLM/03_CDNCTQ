@@ -1,1 +1,90 @@
 \section{Project Timeline and Implementation Plan}
+
+\subsection{Work Package Breakdown and Implementation Strategy}
+The execution of the proposed research is organized into three unified Work Packages (WPs) to ensure a systematic progression from data collection to pipeline development, validation, and documentation:
+\begin{itemize}
+    \item \textbf{WP1: Selective RAG Memory System:} Coordinates the crawl and structured parsing of Vietnamese legal documents, indexing them with dense bi-encoder models, constructing citation graphs, and implementing the dynamic legal importance and Ebbinghaus-based consolidation and decay rerankers.
+    \item \textbf{WP2: Controllable Legal Unlearning Gate:} Implements the $P+Q$ optimization policies for forget requests, output compliance filtering, and the immutable logging audits to ensure regulatory safety.
+    \item \textbf{WP3: System Benchmarking and Validation:} Sets up static RAG baselines, executes ablation studies on the importance features, measures unlearning effectiveness and robustness, and evaluates accuracy on Vietnamese datasets like VLQA \parencite{nguyen2025vlqacomprehensivelargehighquality}, ViLegalNLI \parencite{duong2026vilegalnlinaturallanguageinference}, and LegalSLM \parencite{le-etal-2025-overview}.
+\end{itemize}
+
+The dependency flow between the three Work Packages is illustrated in Figure~\ref{fig:wp_dependencies}.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.5cm and 2cm,
+    wp/.style={draw, rectangle, minimum height=1cm, minimum width=3.5cm, align=center, fill=blue!5, rounded corners, draw=blue!40, font=\footnotesize\bfseries},
+    arrow/.style={-Stealth, thick, draw=gray!80}
+]
+    \node (wp1) [wp] {WP1: Selective RAG Memory \\ (Indexing, Reranking, Gating)};
+    \node (wp2) [wp, below=of wp1] {WP2: Controllable Unlearning \\ (P+Q Filtering, Audit Logs)};
+    \node (wp3) [wp, right=of wp1, yshift=-0.75cm] {WP3: System Benchmarking \\ (VLQA, ViLegalNLI, LegalSLM)};
+
+    \draw [arrow] (wp1) -- node[above, font=\tiny, align=center] {Reranked\\Candidates} (wp3);
+    \draw [arrow] (wp2) -- node[below, font=\tiny, align=center] {Unlearned\\Filters} (wp3);
+    \draw [arrow] (wp1) -- node[left, font=\tiny] {Active Index} (wp2);
+\end{tikzpicture}
+\caption{Workflow dependency graph illustrating interaction between the three Work Packages.}
+\label{fig:wp_dependencies}
+\end{figure}
+
+\subsection{Detailed Implementation Timeline}
+The project spans a 6-month duration. Table~\ref{tab:gantt_timeline} illustrates the Gantt timeline of research tasks mapped across the project months.
+
+\begin{table}[H]
+\centering
+\caption{Monthly Gantt Chart Timeline (Month 1 to Month 6).}
+\label{tab:gantt_timeline}
+\begin{tabularx}{\textwidth}{l|c|c|c|c|c|c}
+\hline
+\textbf{Research Task / Month} & \textbf{M1} & \textbf{M2} & \textbf{M3} & \textbf{M4} & \textbf{M5} & \textbf{M6} \\
+\hline
+\textbf{WP1: Selective RAG Memory} & & & & & & \\
+-- Task 1.1: Corpus Acquisition \& Ingestion & \textbullet & & & & & \\
+-- Task 1.2: Metadata \& Citation Graph Indexing & \textbullet & \textbullet & & & & \\
+-- Task 1.3: Importance \& Consolidation Model & & \textbullet & \textbullet & & & \\
+\hline
+\textbf{WP2: Controllable Unlearning} & & & & & & \\
+-- Task 2.1: Forget Taxonomy \& $P$ Policy Setup & & & \textbullet & & & \\
+-- Task 2.2: $Q$ Prompt Constraints Integration & & & & \textbullet & \textbullet & \\
+-- Task 2.3: Compliance Filtering \& Auditing & & & & & \textbullet & \\
+\hline
+\textbf{WP3: Benchmarking \& Validation} & & & & & & \\
+-- Task 3.1: Baseline Setup \& Evaluators & & \textbullet & \textbullet & & & \\
+-- Task 3.2: Ablation Studies \& Tuning & & & & \textbullet & \textbullet & \\
+-- Task 3.3: Final Validation \& Report Writing & & & & & \textbullet & \textbullet \\
+\hline
+\end{tabularx}
+\end{table}
+
+The corresponding weekly milestones are structured as follows:
+\begin{itemize}
+    \item \textit{Milestone 1 (Week 3):} Complete legal corpus compilation and normalization.
+    \item \textit{Milestone 2 (Week 5):} Complete dense embedding generation and initial indexing.
+    \item \textit{Milestone 3 (Week 9):} Functioning baseline static RAG pipeline with metadata validity filtering.
+    \item \textit{Milestone 4 (Week 12):} Deployment of Selective Memory and Unlearning modules.
+    \item \textit{Milestone 5 (Week 15):} Complete parameter tuning for selective memory reranking.
+    \item \textit{Milestone 6 (Week 18):} Finalize unlearning evaluations and robustness check.
+    \item \textit{Milestone 7 (Week 21):} Achieve benchmark validation target scores.
+    \item \textit{Milestone 8 (Week 24):} Submission of the final project report.
+\end{itemize}
+
+\subsection{Risk Assessment and Mitigation Strategies}
+Table~\ref{tab:risk_assessment} outlines potential technical and operational risks identified for this project, along with corresponding preventive and mitigation actions.
+
+\begin{table}[H]
+\centering
+\caption{Project Risk Assessment and Mitigation Matrix.}
+\label{tab:risk_assessment}
+\begin{tabularx}{\textwidth}{lXX}
+\hline
+\textbf{Identified Risk} & \textbf{Impact \& Probability} & \textbf{Mitigation Strategy} \\
+\hline
+Metadata Inaccuracy & High Impact / Moderate Probability & Implement a double-pass manual verification check on a randomized sample of 5\% of the ingested legal documents. \\
+Retrieval Recall Failure & High Impact / Low Probability & Integrate hybrid search (combining dense bi-encoder with sparse BM25) to act as a fallback retrieval mechanism. \\
+Compute Bottleneck & Moderate Impact / Moderate Probability & Pre-compute dense embeddings offline and restrict hyperparameter tuning search grids via Bayesian optimization. \\
+Access Restriction Leakage & High Impact / Low Probability & Conduct automated validation audits on the access-control filter policy before deploying index updates. \\
+\hline
+\end{tabularx}
+\end{table}

@@ -1,1 +1,31 @@
 \section{Retrievable Gradients and Dynamic Weight Editing}
+
+To mitigate cumulative weight drift during sequential fine-tuning, recent research has explored separating knowledge updates from the permanent parameters of the model. In traditional Continual Post-Training (CPT), continuously updating the network weights $\theta$ leads to irreversible degradation of historical capabilities \parencite{yang2024parametercollisionhinderingcontinual}. The Retrievable Gradients (REGRAD) framework \parencite{su2026retrievablegradientscontinualposttraining} addresses this by treating document-specific gradients as independent units of knowledge that can be stored and retrieved dynamically.
+
+\subsection{ReGrad Framework and Gradient Bank}
+The REGRAD framework operates via a three-phase pipeline \parencite{su2026retrievablegradientscontinualposttraining}:
+\begin{enumerate}
+    \item \textbf{Offline Meta-Learning:} Uses a bi-level meta-learning algorithm to optimize the initial LoRA weights $\theta^*$ and learning rate $\alpha^*$ on target question-answering datasets (e.g., VLQA). This shapes unsupervised language-modeling gradients to support downstream reasoning.
+    \item \textbf{Gradient Bank Construction:} Pre-computes unsupervised language-modeling gradients for each document offline in the LoRA parameter space, storing them in an external database called the Gradient Bank.
+    \item \textbf{Test-Time Parameter Adaptation:} At inference time, given a user query $q$, the system retrieves the top-$K$ relevant gradients from the Gradient Bank, accumulates them linearly, and applies a temporary update to the weights: $\theta_q = \theta^* - \alpha^* \odot \sum g(q)$. After generating the response, the updates are discarded, restoring the base weights to their initial state.
+\end{enumerate}
+This method achieves parameter-level updates without suffering from cumulative weight drift \parencite{su2026retrievablegradientscontinualposttraining}.
+
+\subsection{Comparative Analysis: ReGrad vs. Retrieval-Augmented Generation}
+While both REGRAD and RAG prevent permanent weight drift, they differ fundamentally in how they process and store knowledge:
+\begin{table}[h]
+\centering
+\caption{Comparison between REGRAD and RAG}
+\label{tab:regrad_vs_rag}
+\begin{tabular}{lll}
+\hline
+\textbf{Feature} & \textbf{REGRAD} & \textbf{RAG} \\ \hline
+\textbf{Knowledge Format} & Weights/Gradients (Parametric) & Raw Text (Non-parametric) \\
+\textbf{Integration Time} & Dynamic parameter update at runtime & Context prompt injection at runtime \\
+\textbf{Inference Latency} & High (due to dynamic parameter loading) & Low (only context window expansion) \\
+\textbf{Retrieval Noise Sensitivity} & Parameter interference & Attention dilution \\
+\textbf{Unlearning Complexity} & High (requires Gradient Bank editing) & Low (direct document deletion) \\ \hline
+\end{tabular}
+\end{table}
+
+REGRAD provides deep semantic representation via parameters but introduces significant computational latency during dynamic parameter loading at inference time \parencite{su2026retrievablegradientscontinualposttraining}. Additionally, if the retriever fetches irrelevant documents (distractors), accumulating noisy gradients directly into the weights degrades reasoning capabilities (gradient interference). Conversely, RAG injects text directly into the prompt context, avoiding parameter modification and keeping inference latency low. Furthermore, machine unlearning is simplified in RAG, as it only requires removing or editing documents in the vector database. Consequently, this study adopts a RAG-centric memory approach, while considering retrievable gradients as a potential future extension.

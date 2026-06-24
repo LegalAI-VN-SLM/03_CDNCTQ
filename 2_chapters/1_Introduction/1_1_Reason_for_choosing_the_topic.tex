@@ -1,1 +1,15 @@
 \section{Reason for Choosing the Topic}
+
+In recent years, Large Language Models (LLMs) have achieved remarkable success in natural language processing and legal reasoning, enabling applications such as automated contract review, case law retrieval, and legal question-answering systems \parencite{le-etal-2025-overview, nguyen2025vlqacomprehensivelargehighquality}. However, applying LLMs to the legal domain exposes a critical structural challenge: the dynamic and evolving nature of legal information. Statutes are regularly amended or replaced, judicial precedents are overturned, and specific cases are sealed or restricted due to confidentiality or privacy mandates. Consequently, a static model with pre-trained weights becomes outdated quickly, leading to the retrieval and dissemination of obsolete or incorrect legal advice.
+
+To maintain system accuracy, developers face a dual-engine challenge: the need for continuous knowledge updates coupled with the requirement for intentional forgetting. Traditional continual learning methods seek to integrate new facts directly into the model's parameters using Continual Pre-Training (CPT) or Continual Instruction Tuning (CIT). However, these methods are hindered by catastrophic forgetting, where the model degrades on historical knowledge or general reasoning capabilities when learning new distributions \parencite{kalajdzievski2024scalinglawsforgettingfinetuning, li2024revisitingcatastrophicforgettinglarge}. Furthermore, neural weight updates are computationally expensive and offer limited support for machine unlearning; erasing a specific repealed law or confidential record from pre-trained weights requires complex optimization that can degrade model utility \parencite{11207222}.
+
+This study proposes a RAG-centric semi-parametric continual learning framework to address these issues. By freezing the base LLM and delegating all knowledge updates and unlearning operations to an external, non-parametric knowledge base, we decouple general reasoning from raw legal facts. We introduce a selective memory module to prioritize relevant legal clauses, and an unlearning gate to handle privacy constraints and regulatory compliance.
+
+The scientific and practical significance of this study is twofold:
+\begin{itemize}
+    \item \textbf{Scientific Contribution:} It connects the fields of LLM continual learning and machine unlearning within a non-parametric retrieval-augmented setting, modeling legal memory consolidation and decay based on cognitive psychological theories.
+    \item \textbf{Practical Application:} It builds a secure, low-latency legal assistant pipeline optimized for the Vietnamese language, ensuring that responses rely strictly on active legislation and comply with Right-to-be-Forgotten regulations.
+\end{itemize}
+
+The primary beneficiaries of this research include the Vietnamese legal NLP community, legal tech startups building AI assistants, and compliance departments within banks, courts, and corporate law firms requiring strict data governance and regulatory auditing.

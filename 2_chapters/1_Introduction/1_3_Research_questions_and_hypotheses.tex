@@ -1,3 +1,17 @@
 \section{Research Questions and Hypotheses}
+
 \subsection{Research Questions}
+To guide the investigation and structure the experimental validation, this study addresses three central research questions:
+\begin{itemize}
+    \item \textbf{Research Question 1 (CQ1 - Selective Memory):} Which combination of structural and dynamic legal features (such as citation network centrality, document risk weight, and temporal retrieval history) is most effective for formulating a legal importance score that reduces index size and context noise without degrading retrieval accuracy?
+    \item \textbf{Research Question 2 (CQ2 - RAG vs. Parametric Continual Learning):} How does the proposed RAG-centric non-parametric continual learning framework compare to traditional Continual Pre-Training (CPT) and instruction fine-tuning in terms of general knowledge preservation, update latency, and adaptation to time-regime shifts (before and after legal amendments)?
+    \item \textbf{Research Question 3 (CQ3 - Controllable Unlearning):} To what extent can the $P+Q$ optimization framework successfully implement legal unlearning requests (such as temporal gating, restricted access, and personal data deletion) without degrading the model's accuracy on unrelated, active legal guidelines?
+\end{itemize}
+
 \subsection{Research Hypotheses}
+Based on these questions, we formulate three corresponding research hypotheses to be empirically tested:
+\begin{itemize}
+    \item \textbf{Hypothesis 1 (H1 - Selective RAG Efficiency):} By implementing a legal importance-based selective memory reranker coupled with a compliance hard-gate, the system can reduce active index size by at least 30\% while maintaining semantic retrieval recall within $\pm 2\%$ of a full-index baseline.
+    \item \textbf{Hypothesis 2 (H2 - Weight Preservation):} Maintaining a completely frozen base LLM and updating an external vector index prevents weight drift and catastrophic forgetting, allowing the system to achieve zero degradation on general language benchmarks compared to parametric tuning models.
+    \item \textbf{Hypothesis 3 (H3 - RAG Unlearning Robustness):} Formulating unlearning as a constrained optimization on the external index ($P$) and system prompts ($Q$) achieves an unlearning effectiveness comparable to parameter-level unlearning (ROUGE-L $\le 0.15$ on target concepts), with lower computational overhead and minimal degradation ($\le 5\%$) on control datasets.
+\end{itemize}

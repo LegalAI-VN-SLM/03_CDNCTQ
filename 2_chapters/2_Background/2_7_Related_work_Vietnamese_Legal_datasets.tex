@@ -1,1 +1,17 @@
 \section{Vietnamese Legal Datasets and Benchmarks}
+
+To evaluate model performance within the Vietnamese legal framework, recent research has established several high-quality datasets and benchmarks. These corpora serve as the evaluation foundations for domain adaptation and validation.
+
+\subsection{VLQA: Vietnamese Legal Question Answering}
+The VLQA dataset \parencite{nguyen2025vlqacomprehensivelargehighquality} is the first large-scale, expert-annotated corpus designed for legal question answering and information retrieval in Vietnamese. It consists of over $59,000$ statutory clauses and $3,100$ question-answering pairs linked to specific legal documents. Evaluation metrics on VLQA include Recall@K, Mean Reciprocal Rank (MRR@10), ROUGE, and BLEU. Baseline evaluations report a performance of approximately $59\%$, indicating a substantial gap in retrieval and synthesis. In our proposed framework, VLQA is utilized as the core external knowledge base for RAG memory.
+
+\subsection{ViLegalNLI: Legal Natural Language Inference}
+ViLegalNLI \parencite{duong2026vilegalnlinaturallanguageinference} is the largest natural language inference dataset tailored for Vietnamese legal texts, containing $42,012$ premise-hypothesis pairs. To ensure rigorous logical evaluation, the dataset utilizes Pointwise Mutual Information (PMI) filtering to eliminate lexical shortcuts. This forces models to learn genuine semantic and logical relationships rather than relying on surface-level keyword associations. Baseline models achieve approximately $96\%$ accuracy, though performance varies under distribution shifts.
+
+\subsection{LegalSLM: Evaluating Vietnamese Small Language Models}
+The LegalSLM shared task at VLSP 2025 \parencite{le-etal-2025-overview} systematically evaluates Vietnamese Small Language Models (SLMs) at the $1.7\text{B}$ and $4\text{B}$ parameter scales across QA, NLI, and Syllogism tasks. The evaluations reveal a critical performance gap: while SLMs achieve near-perfect scores ($\sim 98\%$) on objective multiple-choice QA and NLI classification, their accuracy drops to $50\% - 59\%$ on subjective syllogism generation. This gap highlights that domain-adapted SLMs excel at retrieval and classification but struggle with active legal reasoning (tam đoạn luận). This limitation serves as a core motivation for our proposed selective memory and reasoning alignment framework.
+
+\subsection{D-CPT Law: Domain-Specific Continual Pre-Training}
+The D-CPT Law framework \parencite{que2024dcptlawdomainspecificcontinual} investigates scaling laws for domain-specific continual pre-training. Since Vietnamese legal text represents a strong domain shift (Strong Shift) relative to general English-heavy pre-training distributions, the CPT process requires replaying $15\% - 25\%$ of general-domain corpora to anchor basic linguistic representations and prevent catastrophic forgetting.
+
+Despite these developments, two primary gaps remain: (i) SLMs fail at legal syllogism tasks despite extensive domain pre-training, showing the need for memory-augmented reasoning rather than simple parameter optimization, and (ii) existing Vietnamese legal corpora lack structured validity and temporal metadata, hindering the development of models that can dynamically adapt to changing legal regimes.

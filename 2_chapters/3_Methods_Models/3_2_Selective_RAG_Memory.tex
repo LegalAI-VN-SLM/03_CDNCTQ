@@ -1,3 +1,98 @@
 \section{Selective RAG Memory Module}
-\subsection{Forgetting Mechanics}
+
+\subsection{Intuitive Motivation}
+Legal systems are characterized by a massive volume of statutory codes and judicial precedents. However, when addressing a specific legal query, not all provisions are of equal relevance or priority. To emulate cognitive efficiency, the proposed Selective RAG Memory Module dynamically ranks knowledge units based on their \textit{legal importance} and down-ranks (prunes) less critical resources to reduce context noise. Crucially, the system differentiates between semantic relevance and legal validity. While cognitive decay can be applied to archived or secondary guidelines, all currently active laws matching the query's scope are strictly preserved via a compliance hard-gate to guarantee absolute legal coverage.
+
 \subsection{Importance Score Formulation}
+For any knowledge unit $u_i \in KB$ at query time $t$, its overall Legal Importance Score $I(u_i, t)$ is modeled as a linear combination of structural, status-based, and historical features:
+\begin{equation}
+    I(u_i, t) = w_1 \cdot \text{norm}(c_i) + w_2 \cdot v_i + w_3 \cdot \rho_i + w_4 \cdot g(H_i, t)
+\end{equation}
+where $w_1, w_2, w_3, w_4 \ge 0$ are weighting coefficients satisfying $\sum_{k=1}^4 w_k = 1$. The individual feature components are defined as:
+\begin{itemize}
+    \item $\text{norm}(c_i) \in [0, 1]$ represents the normalized citation centrality of $u_i$ within the global legal citation graph, highlighting fundamental codes.
+    \item $v_i \in \{0, 1\}$ is the binary validity flag, prioritizing active legislation.
+    \item $\rho_i \in [0, 1]$ denotes the risk and hierarchical weight of the document source.
+    \item $g(H_i, t) \in [0, 1]$ is the temporal consolidation score representing access frequency.
+\end{itemize}
+
+We propose two distinct methodologies for estimating the optimal parameters $w_1, \dots, w_4$, which will be validated via ablation experiments:
+\begin{enumerate}
+    \item \textbf{Rule-Based Validation Optimization:} The weights are treated as hyperparameters and optimized on a validation subset of VLQA \parencite{nguyen2025vlqacomprehensivelargehighquality} to maximize retrieval performance metrics, specifically:
+    \begin{equation}
+        \mathbf{w}^* = \arg\max_{\mathbf{w}} \text{Recall@K}(KB(\mathbf{w}))
+    \end{equation}
+    \item \textbf{LLM-Estimated Cognitive Scoring:} An auxiliary LLM is utilized to score each knowledge unit along legal dimensions (e.g., applicability, public interest, and precedent weight), mirroring the multidimensional memory model of Sumida's LUFY framework \parencite{Sumida_2025}.
+\end{enumerate}
+
+\subsection{Consolidation and Decay Dynamics}
+The historical access score $g(H_i, t)$ captures the cognitive curve of learning and forgetting. Drawing from the Ebbinghaus forgetting curve adapted to retrieval systems \parencite{Sumida_2025}, every time a legal clause $u_i$ is accessed during a query transaction at time $\tau \in H_i$, its memory trace is consolidated. Over time, in the absence of access requests, the trace decays exponentially:
+\begin{equation}
+    g(H_i, t) = \sum_{\tau \in H_i, \tau < t} \exp\left(-\lambda \cdot (t - \tau)\right)
+\end{equation}
+where $\lambda > 0$ represents the decay rate (a hyperparameter governing the forgetting speed). Frequent queries reinforce the status of a law in active memory, while obsolete or rarely referenced guidelines fade naturally into colder storage tiers.
+
+\subsection{Memory Stratification Tiers}
+To prevent data loss while maintaining low-latency retrieval, the knowledge store is stratified into two logical tiers based on the dynamic score $I(u_i, t)$ and an adaptation threshold $\theta$:
+\begin{itemize}
+    \item \textbf{Active Tier (Long-Term Semantic Memory):} Units with $I(u_i, t) \ge \theta$. These units are held in high-speed, prioritized indices and form the primary search space for typical queries.
+    \item \textbf{Archive Tier (Cold Storage Memory):} Units with $I(u_i, t) < \theta$. Rather than being permanently deleted, these units are down-ranked and stored in cold storage indices. They are bypassed during standard operations but remain searchable for historical compliance requests.
+\end{itemize}
+
+\subsection{Compliance Hard-Gate Reranking}
+A standard RAG system ranking documents purely on semantic similarity is prone to omitting critical legal clauses if their text does not closely match the user's phrasing. To eliminate this risk, we introduce a \textit{Compliance Hard-Gate} that operates on the retrieved candidate set.
+
+Let $C_q = \text{Retrieve\_topM}(q)$ be the initial set of candidate knowledge units retrieved from $KB$ using semantic similarity $\text{sim}(q, e_i)$. The candidate set is partitioned into two disjoint subsets:
+\begin{equation}
+    \text{must\_keep} = \{u_i \in C_q : v_i = 1 \text{ and } \text{matches}(q, u_i)\}
+\end{equation}
+\begin{equation}
+    \text{rest} = C_q \setminus \text{must\_keep}
+\end{equation}
+where $\text{matches}(q, u_i)$ returns true if $u_i$ is actively valid and is structurally linked to the query's temporal and jurisdictional constraints.
+
+While the units in $\text{must\_keep}$ are guaranteed direct inclusion in the context window, the remaining units in $\text{rest}$ are reranked using the dynamic scoring function:
+\begin{equation}
+    S(q, u_i) = \text{sim}(q, e_i) + \beta \cdot I(u_i, t)
+\end{equation}
+where $\beta \ge 0$ is a scaling factor balancing semantic relevance and legal importance. The final generation context is constructed as:
+\begin{equation}
+    \text{Context}(q) = \text{must\_keep} \cup \text{Top\_k}(\text{rest} \text{ sorted by } S(q, u_i))
+\end{equation}
+This formulation ensures that validity acts as a hard filter, preventing active legal clauses from being decayed or omitted due to low semantic matching.
+
+\subsection{Retrieval Algorithm Pseudocode}
+The step-by-step selective retrieval process is detailed in Algorithm~\ref{alg:selective_retrieve} using standard procedural logic.
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.9\textwidth}
+\hrule
+\vspace{1ex}
+\textbf{Algorithm 1:} Selective Legal Memory Retrieval Process
+\vspace{0.5ex}
+\hrule
+\vspace{1ex}
+\begin{tabbing}
+\quad \= \quad \= \quad \= \quad \= \kill
+\textbf{Input:} Query $q$, query timestamp $t_q$, retrieval parameters $M$, $k$, $\beta$ \\
+\textbf{Output:} Selected context document set $Context$ \\
+1. $C_q \leftarrow \text{DenseRetriever.retrieve\_topM}(q)$ \\
+2. $C_q \leftarrow \text{UnlearningGate.filter}(C_q, q, t_q)$ \` // Filter out unlearned items (Section 3.3) \\
+3. $\text{must\_keep} \leftarrow \emptyset$, $\text{rest} \leftarrow \emptyset$ \\
+4. \textbf{for} each $u_i \in C_q$ \textbf{do} \\
+5. \> \textbf{if} $u_i.v == 1$ \textbf{and} $\text{matches}(q, u_i)$ \textbf{then} \\
+6. \>\> $\text{must\_keep} \leftarrow \text{must\_keep} \cup \{u_i\}$ \\
+7. \> \textbf{else} \\
+8. \>\> $\text{rest} \leftarrow \text{rest} \cup \{u_i\}$ \\
+9. \>\> $u_i.\text{score} \leftarrow \text{sim}(q, u_i.e) + \beta \cdot I(u_i, t_q)$ \\
+10. \textbf{end for} \\
+11. $\text{sorted\_rest} \leftarrow \text{sort\_descending}(\text{rest} \text{ by } \text{score})$ \\
+12. $Context \leftarrow \text{must\_keep} \cup \text{take\_top}(\text{sorted\_rest}, k - |\text{must\_keep}|)$ \\
+13. \textbf{return} $Context$
+\end{tabbing}
+\hrule
+\end{minipage}
+\caption{Algorithmic pipeline of the Selective RAG retrieval showing the sequential application of the unlearning gate, compliance gate, and dynamic reranker.}
+\label{alg:selective_retrieve}
+\end{figure}

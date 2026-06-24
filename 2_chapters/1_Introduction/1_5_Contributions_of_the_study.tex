@@ -1,1 +1,8 @@
 \section{Contributions of the Study}
+
+The primary contributions of this study to the fields of legal artificial intelligence and large language model continual learning are summarized as follows:
+\begin{enumerate}
+    \item \textbf{Legal Importance-Based Selective Memory Model:} We introduce a novel retrieval ranking score designed specifically for the legal domain. By extending cognitive psychological models of memory importance and forgetting (such as the Ebbinghaus forgetting curve) to legal text units, the system dynamically down-ranks outdated or rarely accessed regulations. This optimizes search index efficiency while employing a strict validation gate to ensure currently active legislation is never decayed or missed.
+    \item \textbf{Controllable Retrieval-Level Legal Unlearning Gate:} We implement a secure, low-overhead machine unlearning architecture for frozen LLMs using the $P+Q$ framework. We define a taxonomy of legal forget requests (including temporal gating for replaced laws, access controls for sealed cases, and index pruning for personal data) and deploy online compliance filters to prevent target knowledge leakage.
+    \item \textbf{Standardized Vietnamese Legal Continual Learning Evaluation Protocol:} We establish a quantitative benchmark pipeline for evaluating legal CL. We configure evaluation metrics for retrieval accuracy, catastrophic forgetting, and time-regime adaptation, providing a reproducible testing framework on public Vietnamese datasets such as VLQA \parencite{nguyen2025vlqacomprehensivelargehighquality}, ViLegalNLI \parencite{duong2026vilegalnlinaturallanguageinference}, and LegalSLM \parencite{le-etal-2025-overview}.
+\end{enumerate}

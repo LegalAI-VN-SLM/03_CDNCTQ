@@ -1,1 +1,21 @@
 \section{Machine Unlearning in Retrieval-Augmented Generation}
+
+Machine unlearning is defined as the process of removing the influence of specific training samples or concepts from a trained model. In the legal domain, unlearning is highly critical due to requirements such as the abrogation of statutory laws, the sealing of judicial records, and compliance with data privacy frameworks like the "right to be forgotten" \parencite{11207222}. However, performing unlearning at the model parameter level (e.g., via gradient ascent or preference alignment) is computationally expensive, unstable, and often induces catastrophic forgetting of general capabilities.
+
+\subsection{RAG-Based Behavioral Unlearning}
+To bypass these issues, recent research has proposed RAG-based behavioral unlearning, simulating the effects of forgetting without altering the base model parameters \parencite{11207222}. This approach formulates unlearning as a constrained optimization problem over the external knowledge base. 
+
+For a target concept or document $C$ that needs to be forgotten, the system constructs a corresponding unlearned knowledge item containing confidentiality constraints or modifications to the retrieved context. When the query references the target concept, the RAG expert retrieves the modified context, preventing the LLM from generating the sensitive or outdated information. This plug-and-play approach is highly effective for both open-source and closed-source models (such as GPT-4o and Gemini) where direct parameter modification is impossible.
+
+\subsection{Evaluation Protocols and Metrics}
+To measure the quality of unlearning, frameworks establish five primary evaluation dimensions \parencite{11207222}:
+\begin{enumerate}
+    \item \textbf{Effectiveness:} The success rate in preventing target information retrieval, measured via Unlearning Success Rate (USR) and ROUGE-L similarity.
+    \item \textbf{Universality:} Adaptability across various tasks, models, and modalities.
+    \item \textbf{Harmlessness:} The preservation of general capabilities on unrelated tasks, evaluated via standard benchmarks like MMLU and ARC.
+    \item \textbf{Simplicity:} The computational efficiency and ease of deployment.
+    \item \textbf{Robustness:} Defense against adversarial extraction attacks, measured via True Positive Rate at 1\% False Positive Rate (TPR@1\%FPR) to check residual memorization.
+\end{enumerate}
+In safety-critical applications, the Harmful Output Probability (HOP) is also measured to evaluate the suppression of toxic generations.
+
+The principal research gap is the lack of a standardized unlearning framework tailored for legal compliance in Vietnamese Legal AI. This includes ensuring that when a specific decree is annulled, the unlearning mechanism completely suppresses its usage without degrading the model's accuracy on active, interrelated laws.

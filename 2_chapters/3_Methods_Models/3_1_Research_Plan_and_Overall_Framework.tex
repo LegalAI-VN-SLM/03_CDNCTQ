@@ -1,3 +1,118 @@
 \section{Study Content and Methods}
-\subsection{Overall Framework}
+
+\subsection{Core Design Principles}
+The architectural foundation of the proposed Vietnamese legal question-answering and reasoning framework is anchored on the principle of keeping the parameters of the base Large Language Model (LLM) completely frozen. Rather than continuously updating the model's weights through domain-specific Continual Pre-Training (CPT) or Continual Instruction Tuning (CIT), all legal knowledge acquisitions, modifications, and deletions are delegated to an external, non-parametric knowledge store. 
+
+This design choice is scientifically motivated by three primary limitations of weight-updating continual learning:
+\begin{enumerate}
+    \item \textbf{Prevention of Catastrophic Forgetting and Weight Drift:} Modifying LLM weights over sequential data streams inevitably causes performance degradation on general cognitive tasks, a phenomenon governed by inverse linear scaling laws between parameter updates and historical retention \parencite{kalajdzievski2024scalinglawsforgettingfinetuning, li2024revisitingcatastrophicforgettinglarge}. Keeping the base model frozen guarantees that its pre-trained general reasoning and linguistic capabilities are preserved intact.
+    \item \textbf{Immediate and Low-Cost Knowledge Injection:} Adapting parameters to represent newly enacted laws or amendments requires intensive compute resources and complex scheduling to overcome the stability gap \parencite{gupta2023continualpretraininglargelanguage, guo2024efficientcontinualpretrainingmitigating}. In contrast, updating an external knowledge store is a database transaction that takes effect instantaneously at near-zero compute cost.
+    \item \textbf{First-Class Machine Unlearning Support:} Erasing specific information (e.g., personal identifiable information under the right-to-be-forgotten, or repealed legal clauses) from neural network weights is an expensive and mathematically challenging task, often requiring complex gradient ascent routines that can degrade model utility \parencite{11207222}. Under the proposed non-parametric framework, unlearning is formulated as a precise behavioral filtering and index deletion operation, which is highly robust and fully reversible.
+\end{enumerate}
+
+\subsection{Overall Framework Architecture}
+The framework operates across two distinct phases: an offline indexing phase and an online inference phase. During the offline indexing phase, Vietnamese legal codes, decrees, circulars, and judicial precedents are structured into unified knowledge units, annotated with legal metadata, indexed via semantic embedding models, and constructed into a legal citation graph. During the online inference phase, user queries are matched semantically against the knowledge base, filtered through the unlearning gate, prioritized by the selective memory reranker, and presented as context to the frozen LLM for final response generation.
+
+The flow of information and components is visualized in Figure~\ref{fig:overall_architecture}.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.2cm and 0.8cm,
+    block/.style={draw, rectangle, minimum height=0.8cm, minimum width=2.8cm, align=center, fill=blue!5, rounded corners, draw=blue!40, font=\footnotesize},
+    process/.style={draw, rectangle, minimum height=0.8cm, minimum width=2.8cm, align=center, fill=gray!5, rounded corners, draw=gray!40, font=\footnotesize},
+    db/.style={draw, cylinder, cylinder points=20, shape border rotate=90, minimum height=1cm, minimum width=2cm, align=center, fill=orange!5, draw=orange!40, font=\footnotesize},
+    arrow/.style={-Stealth, thick, draw=gray!80}
+]
+    % Offline nodes
+    \node (raw) [process] {Vietnamese Legal Corpus \\ (Laws, Decrees, Precedents)};
+    \node (prep) [process, below=of raw] {Structure Normalization \\ \& Metadata Tagging};
+    \node (graph) [process, below=of prep] {Citation Graph Construction \\ \& Embedding Generation};
+    \node (kb) [db, below=of graph] {Metadata-Augmented \\ Knowledge Base ($KB$)};
+    
+    % Online nodes
+    \node (query) [process, right=2.5cm of raw] {User Query $q$ \\ (Time-stamp $t_q$)};
+    \node (retriever) [block, below=of query] {Semantic Retriever \\ ($\text{sim}(q, e_i)$)};
+    \node (unlearning) [block, below=of retriever] {Unlearning Gate (3.3) \\ (Filter Policy $P$)};
+    \node (selective) [block, below=of unlearning] {Selective Memory (3.2) \\ (Rerank \& Compliance Gate)};
+    \node (llm) [block, below=of selective] {Frozen Base LLM \\ (Prompt Constraints $Q$)};
+    \node (output) [process, below=of llm] {Reasoned Response \\ \& Audit Logging};
+
+    % Connections
+    \draw [arrow] (raw) -- (prep);
+    \draw [arrow] (prep) -- (graph);
+    \draw [arrow] (graph) -- (kb);
+    \draw [arrow] (query) -- (retriever);
+    \draw [arrow] (kb.east) -- node[above, font=\tiny, pos=0.5] {Retrieve} (retriever.west);
+    \draw [arrow] (retriever) -- (unlearning);
+    \draw [arrow] (unlearning) -- (selective);
+    \draw [arrow] (selective) -- (llm);
+    \draw [arrow] (llm) -- (output);
+    
+    % Phase Labels
+    \node[draw=blue!20, fill=blue!2, dashed, fit=(raw) (prep) (graph) (kb), inner sep=0.3cm, label=above:\textbf{OFFLINE INDEXING}] {};
+    \node[draw=green!20, fill=green!2, dashed, fit=(query) (retriever) (unlearning) (selective) (llm) (output), inner sep=0.3cm, label=above:\textbf{ONLINE INFERENCE}] {};
+
+\end{tikzpicture}
+\caption{Overall framework of the proposed RAG-centric legal continual learning system, illustrating the isolation between offline indexing and the online retrieval pipeline.}
+\label{fig:overall_architecture}
+\end{figure}
+
+\subsection{Knowledge Unit and Metadata Schema}
+The external knowledge base is formally represented as a set of discrete knowledge units:
+\begin{equation}
+    KB = \{u_1, u_2, \dots, u_N\}
+\end{equation}
+Each knowledge unit $u_i$ represents a single legal clause (Điều/Khoản) or a judicial precedent section. It is formally represented by a metadata-augmented tuple:
+\begin{equation}
+    u_i = \langle e_i, v_i, [t_{\text{start}}, t_{\text{end}}], c_i, \rho_i, H_i, acl_i \rangle
+\end{equation}
+where the individual elements are defined as follows:
+\begin{itemize}
+    \item \textbf{Semantic Embedding ($e_i \in \mathbb{R}^D$):} The vector representation of the unit's textual content generated by a Vietnamese-optimized bi-encoder model, used for dense semantic retrieval.
+    \item \textbf{Validity Flag ($v_i \in \{0, 1\}$):} A binary indicator where $v_i = 1$ denotes that the legal clause is currently active, and $v_i = 0$ denotes that it has been repealed, suspended, or replaced.
+    \item \textbf{Validity Interval ($[t_{\text{start}}, t_{\text{end}}]$):} The temporal window representing the effective date ($t_{\text{start}}$) and expiration date ($t_{\text{end}}$) of the legal provision. This interval supports temporal query routing.
+    \item \textbf{Citation Centrality ($c_i \in [0, 1]$):} A score derived from a constructed network of legal cross-references (e.g., how often a decree cites a specific law, or how often a precedent cites a code). High centrality corresponds to foundational legal articles.
+    \item \textbf{Risk and Applicability Weight ($\rho_i \in [0, 1]$):} A structural parameter representing the priority of the clause based on its administrative hierarchy (e.g., Constitution $>$ Law $>$ Decree $>$ Circular) and critical compliance risks.
+    \item \textbf{Access History ($H_i = \{\tau_1, \tau_2, \dots\}$):} A set of timestamps recording when the knowledge unit was successfully retrieved and used in generation. This historical record governs memory consolidation and cognitive decay.
+    \item \textbf{Access Control List ($acl_i$):} Security metadata defining user permissions and classification boundaries, preventing restricted or sealed cases from leaking to unauthorized clients.
+\end{itemize}
+
+\subsection{Methodological Comparison: RAG-Centric vs. Alternative Paradigms}
+To validate the design choice of this study, Table~\ref{tab:methodology_comparison} compares the proposed RAG-centric framework against parametric Continual Pre-Training/Instruction Tuning and hybrid parametric-external systems such as Retrievable Gradients (ReGrad) \parencite{su2026retrievablegradientscontinualposttraining}.
+
+\begin{table}[H]
+\centering
+\caption{Comparison of Knowledge Adaptation Paradigms in Legal Large Language Models.}
+\label{tab:methodology_comparison}
+\begin{tabularx}{\textwidth}{lXXX}
+\hline
+\textbf{Evaluation Metric} & \textbf{Parametric CPT/CIT} & \textbf{Semi-Parametric (ReGrad)} & \textbf{RAG-Centric (Proposed)} \\
+\hline
+Weight Drift Risk & Severe (Catastrophic Forgetting) & Controlled via gradient projection & \textbf{Zero} (Weights frozen) \\
+Update Cost & Extremely High (Fine-Tuning) & Moderate (Gradient database) & \textbf{Negligible} (Index update) \\
+Unlearning Overhead & High (Requires training) & Complex (Gradient projection) & \textbf{Minimal} (Metadata gate) \\
+Inference Latency & Baseline & High (Dynamic gradient application) & Baseline + search overhead \\
+Reasoning Capacity & Dependent on domain tuning & Enhanced by local adapters & Bound by base frozen model \\
+\hline
+\end{tabularx}
+\end{table}
+
+While ReGrad \parencite{su2026retrievablegradientscontinualposttraining} mitigates weight drift using a gradient bank and bi-level optimization, its execution is hindered by high computational complexity and latency overheads at inference time. Given that legal workflows require strict latency bounds and auditability, the proposed RAG-centric framework provides the most pragmatic balance for Vietnamese legal applications, acknowledging that reasoning boundaries are constrained by the choice of the base frozen LLM.
+
 \subsection{Work Packages Definition}
+To implement and evaluate the proposed framework, the research is organized into three unified Work Packages (WPs):
+\begin{itemize}
+    \item \textbf{WP1: Selective RAG Memory System (Section 3.2):} Focuses on defining dynamic legal importance, integrating Ebbinghaus-based consolidation, formulating the memory stratification, and constructing the compliance hard-gate.
+    \item \textbf{WP2: Controllable Legal Unlearning Gate (Section 3.3):} Implements the P+Q unlearning framework to manage temporal, sealed, and personal data deletion requests, incorporating compliance filters and security logs.
+    \item \textbf{WP3: Vietnamese Legal-CL Benchmark and Verification (Chapter 4):} Develops evaluation pipelines based on Vietnamese datasets like VLQA \parencite{nguyen2025vlqacomprehensivelargehighquality}, ViLegalNLI \parencite{duong2026vilegalnlinaturallanguageinference}, and LegalSLM \parencite{le-etal-2025-overview}.
+\end{itemize}
+
+\subsection{System Assumptions and Boundary Conditions}
+The success and deployment safety of this framework rely on two core assumptions and are bound by specific limitations:
+\begin{enumerate}
+    \item \textbf{Assumption of Metadata Integrity (GĐ1):} The temporal validity ($v_i, t_{\text{start}}, t_{\text{end}}$) and access permissions ($acl_i$) tagged during the ingestion pipeline are assumed to be highly accurate. Inaccurate metadata propagates directly to compliance failures.
+    \item \textbf{Assumption of Retrieval Quality (GĐ2):} The semantic bi-encoder is assumed to have sufficient retrieval recall (Recall@K) on legal terminology. If the retriever fails to retrieve relevant clauses, the downstream reasoning will fail.
+    \item \textbf{Reasoning Boundary (GH1):} The system's logical reasoning depth is bounded by the capabilities of the frozen base LLM. RAG improves the factual context quality, but cannot resolve intrinsic reasoning limitations of the underlying model \parencite{le-etal-2025-overview}.
+    \item \textbf{Unlearning Boundary (GH2):} The unlearning process ensures that target information is not retrieved or used in grounding (retrieval-level unlearning). It does not guarantee deletion of facts already present in the pre-trained weights of the base LLM, which must be managed by prompting constraints.
+\end{enumerate}

@@ -1,3 +1,17 @@
 \section{Research Subjects and Scope}
+
 \subsection{Research Subjects}
-\subsection{Research Scope}
+The subjects of this research are divided into two categories:
+\begin{itemize}
+    \item \textbf{Technical Subject:} The retrieval-augmented generation (RAG) architecture and non-parametric continual learning pipeline, specifically the selective memory module and controllable unlearning gate.
+    \item \textbf{Data Subject:} Structured Vietnamese statutory documents, including the national Constitution, civil and penal codes, government decrees, ministerial circulars, and official judicial precedents.
+\end{itemize}
+
+\subsection{Research Scope and Boundaries}
+To ensure the feasibility of the study within the 6-month research timeline, the following boundaries are defined:
+\begin{enumerate}
+    \item \textbf{Content Scope:} The evaluation is restricted to structured legal tasks, specifically Legal Question Answering (QA), Legal Natural Language Inference (NLI), and rule-based logical reasoning. Open-ended, conversational drafting or long-form document synthesis is outside the scope of this study. The primary methodology evaluates non-parametric index management; parametric adaptation models (such as ReGrad) are restricted to comparative baselines.
+    \item \textbf{Geographical and Jurisdictional Scope:} The research focuses exclusively on the legal system of the Socialist Republic of Vietnam. All statutory texts, judicial precedents, and evaluation benchmarks are processed and evaluated in the Vietnamese language.
+    \item \textbf{Temporal Scope:} The legal corpus targets documents promulgated from the year 2005 to the present. Specific legislative milestones featuring major code amendments (e.g., the Civil Code revisions or penal code updates) are selected to create distinct "legal time-regimes," allowing validation of the temporal compliance gating and unlearning components.
+    \item \textbf{Unlearning Scope:} The unlearning process is evaluated based on its retrieval-level performance (preventing the retrieval or citation of target documents). Removing concepts that have already been integrated into the pre-trained weights of the base LLM during its initial training is excluded from this scope.
+\end{enumerate}
