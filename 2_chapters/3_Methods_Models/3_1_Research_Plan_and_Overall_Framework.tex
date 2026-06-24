@@ -10,6 +10,8 @@ This design choice is scientifically motivated by three primary limitations of w
     \item \textbf{First-Class Machine Unlearning Support:} Erasing specific information (e.g., personal identifiable information under the right-to-be-forgotten, or repealed legal clauses) from neural network weights is an expensive and mathematically challenging task, often requiring complex gradient ascent routines that can degrade model utility \parencite{11207222}. Under the proposed non-parametric framework, unlearning is formulated as a precise behavioral filtering and index deletion operation, which is highly robust and fully reversible.
 \end{enumerate}
 
+While the base model is frozen, lightweight Low-Rank Adaptation (LoRA) adapters are introduced \emph{separately} to acquire task behaviour---legal reasoning style, citation format, and the policy for grounding on retrieved context---as detailed in Section~\ref{sec:lora}. These adapters add only a small set of auxiliary parameters and never overwrite the base weights, so the three guarantees above continue to hold; factual knowledge remains entirely in the external store rather than in the adapters. The framework is therefore best characterized as \emph{hybrid}: non-parametric RAG memory for facts, and parameter-efficient LoRA for behaviour.
+
 \subsection{Overall Framework Architecture}
 The framework operates across two distinct phases: an offline indexing phase and an online inference phase. During the offline indexing phase, Vietnamese legal codes, decrees, circulars, and judicial precedents are structured into unified knowledge units, annotated with legal metadata, indexed via semantic embedding models, and constructed into a legal citation graph. During the online inference phase, user queries are matched semantically against the knowledge base, filtered through the unlearning gate, prioritized by the selective memory reranker, and presented as context to the frozen LLM for final response generation.
 
@@ -49,9 +51,11 @@ The flow of information and components is visualized in Figure~\ref{fig:overall_
     \draw [arrow] (selective) -- (llm);
     \draw [arrow] (llm) -- (output);
     
-    % Phase Labels
+    % Phase Labels (drawn on background so they do not cover the inner nodes)
+    \begin{scope}[on background layer]
     \node[draw=blue!20, fill=blue!2, dashed, fit=(raw) (prep) (graph) (kb), inner sep=0.3cm, label=above:\textbf{OFFLINE INDEXING}] {};
     \node[draw=green!20, fill=green!2, dashed, fit=(query) (retriever) (unlearning) (selective) (llm) (output), inner sep=0.3cm, label=above:\textbf{ONLINE INFERENCE}] {};
+    \end{scope}
 
 \end{tikzpicture}
 \caption{Overall framework of the proposed RAG-centric legal continual learning system, illustrating the isolation between offline indexing and the online retrieval pipeline.}
@@ -83,9 +87,12 @@ To validate the design choice of this study, Table~\ref{tab:methodology_comparis
 
 \begin{table}[H]
 \centering
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
 \caption{Comparison of Knowledge Adaptation Paradigms in Legal Large Language Models.}
 \label{tab:methodology_comparison}
-\begin{tabularx}{\textwidth}{lXXX}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
 \hline
 \textbf{Evaluation Metric} & \textbf{Parametric CPT/CIT} & \textbf{Semi-Parametric (ReGrad)} & \textbf{RAG-Centric (Proposed)} \\
 \hline
@@ -99,6 +106,62 @@ Reasoning Capacity & Dependent on domain tuning & Enhanced by local adapters & B
 \end{table}
 
 While ReGrad \parencite{su2026retrievablegradientscontinualposttraining} mitigates weight drift using a gradient bank and bi-level optimization, its execution is hindered by high computational complexity and latency overheads at inference time. Given that legal workflows require strict latency bounds and auditability, the proposed RAG-centric framework provides the most pragmatic balance for Vietnamese legal applications, acknowledging that reasoning boundaries are constrained by the choice of the base frozen LLM.
+
+\subsection{Data Collection, Sampling, and Analysis}
+This subsection specifies the research methodology along its three classical dimensions: how data are collected, how samples are drawn, and how the resulting data are analyzed.
+
+\textbf{Data collection.} Vietnamese statutory documents (laws, decrees, and circulars) and judicial precedents are collected from official government portals and legal gazettes. Each document is then processed through the offline pipeline of Section~3.1.2: it is segmented into atomic knowledge units (articles or clauses, and precedent sections), normalized, and annotated with the metadata fields of the schema---validity flag, validity interval, citation links, risk weight, and access-control level. A legal citation graph is constructed from the cross-references, and dense embeddings are produced by a Vietnamese-optimized bi-encoder. To control annotation quality and mitigate the metadata-integrity risk, the temporal-validity and access-control fields of a randomized $5\%$ sample of ingested units are verified by legal experts.
+
+\textbf{Sampling.} The study is grounded on three expert-annotated datasets, each with a distinct role: VLQA \parencite{nguyen2025vlqacomprehensivelargehighquality} provides the roughly $59{,}000$-article retrieval knowledge base and the question-answering sample; ViLegalNLI \parencite{duong2026vilegalnlinaturallanguageinference} measures legal inference with lexical shortcuts removed; and LegalSLM \parencite{le-etal-2025-overview} probes multi-step syllogistic reasoning. Samples are drawn with \emph{topic-stratified} splitting across the nine VLQA legal topics to avoid domain skew, using standard train/development/test partitions for tuning and held-out evaluation. For the unlearning study, a \emph{forget set} is paired with a size-matched, topically related \emph{retain set} so that effectiveness and harmlessness are measured on disjoint but comparable populations; for the temporal study, units are split on their validity interval to construct before/after legal regimes. The continual nature of the problem is exercised through three scenarios:
+\begin{itemize}
+    \item \textbf{Scenario A --- Knowledge Update:} newly enacted or amended provisions are injected into the $KB$, and before/after legal regimes are evaluated for temporal correctness.
+    \item \textbf{Scenario B --- Unlearning Case:} repealed, sealed, or personal-data units form the forget set, evaluated jointly with the related retain set.
+    \item \textbf{Scenario C --- Selective-Memory Stress:} a large index is pruned by importance to verify that decay reduces size without breaching compliance.
+\end{itemize}
+
+\textbf{Data analysis.} Each ablation stage (Section~``Experimental Design'' below) is compared against the static-RAG baseline on the metric groups defined there, and each research hypothesis (H1--H3) is assessed against its designated metrics. Component ablations---over importance features, the decay rate $\lambda$, and the $P$-only versus $P{+}Q$ unlearning variants---isolate the contribution of individual design choices. Differences are reported with descriptive statistics and, where sample sizes permit, significance testing; in addition, a qualitative error analysis inspects failure cases, particularly multi-step syllogistic reasoning (the known weak point of Vietnamese legal small language models), to characterize residual limitations. The end-to-end data workflow---from collection through to analysis---is summarized in Figure~\ref{fig:data_pipeline}.
+
+\begin{figure}[H]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tikzpicture}[
+  font=\footnotesize, node distance=1.4cm,
+  stage/.style={rectangle, rounded corners, draw, align=left, text width=3.2cm,
+                minimum height=2.6cm, inner sep=5pt, fill=gray!3},
+  arr/.style={-{Stealth[length=3mm]}, very thick, draw=gray!70}
+]
+\node[stage] (c) {\textbf{1. Collection}\\[3pt]
+  $\bullet$ Gov.\ portals \& gazettes\\
+  $\bullet$ Laws, decrees, circulars, precedents\\
+  $\bullet$ Raw legal corpus};
+\node[stage, right=of c] (p) {\textbf{2. Preprocessing \& Indexing}\\[3pt]
+  $\bullet$ Segment $\to$ units\\
+  $\bullet$ Normalize\\
+  $\bullet$ Metadata $(v,[t],c,\rho,acl)$\\
+  $\bullet$ Citation graph + embedding $\to KB$};
+\node[stage, right=of p] (s) {\textbf{3. Sampling}\\[3pt]
+  $\bullet$ Topic-stratified train/dev/test\\
+  $\bullet$ Forget $\leftrightarrow$ retain (matched)\\
+  $\bullet$ Regime split (validity)\\
+  $\bullet$ Scenarios A / B / C};
+\node[stage, right=of s] (a) {\textbf{4. Analysis}\\[3pt]
+  $\bullet$ Ablation ladder vs static RAG\\
+  $\bullet$ Metric groups\\
+  $\bullet$ Test H1--H3 (+ statistics)\\
+  $\bullet$ Error analysis (syllogism)};
+\draw[arr] (c) -- (p);
+\draw[arr] (p) -- (s);
+\draw[arr] (s) -- (a);
+\node[above=0.35cm of p, font=\scriptsize, align=center] (v) {expert validation ($5\%$)};
+\draw[-{Stealth[length=2mm]}, dashed, draw=gray!70] (v) -- (p);
+\end{tikzpicture}
+}
+\caption{The data methodology pipeline: collection, preprocessing and indexing, sampling, and analysis. The dashed arrow denotes expert validation of a $5\%$ metadata sample.}
+\label{fig:data_pipeline}
+\end{figure}
+
+\subsection{Experimental Design and Evaluation Metrics}
+Evaluation follows an incremental ablation ladder that isolates the contribution of each module: (i) a \emph{static RAG} baseline sharing the same base model, adapter, and knowledge base; (ii) the addition of selective memory; (iii) the addition of the unlearning gate. Parametric Continual Pre-Training/Instruction Tuning and the Retrievable Gradients approach serve as external points of comparison for the forgetting analysis. Performance is assessed along five metric groups: retrieval and task accuracy (Recall@$K$, MRR@$10$, QA/NLI accuracy, syllogism score); forgetting of general ability (Forgetting Gradient and Backward Transfer); legal compliance (the proportion of answers grounded in in-force law and avoiding repealed clauses); unlearning quality (Unlearning Success Rate, ROUGE-L on the forget set, harmlessness on the retain set, and membership-inference TPR@$1\%$FPR); and computational cost (active index size and retrieval latency). These groups map directly onto the research hypotheses, while their concrete acceptance thresholds and the implementation timeline are specified in Chapter~4.
 
 \subsection{Work Packages Definition}
 To implement and evaluate the proposed framework, the research is organized into three unified Work Packages (WPs):

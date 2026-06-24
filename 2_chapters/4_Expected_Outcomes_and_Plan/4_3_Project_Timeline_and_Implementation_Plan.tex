@@ -20,7 +20,7 @@ The dependency flow between the three Work Packages is illustrated in Figure~\re
     \node (wp1) [wp] {WP1: Selective RAG Memory \\ (Indexing, Reranking, Gating)};
     \node (wp2) [wp, below=of wp1] {WP2: Controllable Unlearning \\ (P+Q Filtering, Audit Logs)};
     \node (wp3) [wp, right=of wp1, yshift=-0.75cm] {WP3: System Benchmarking \\ (VLQA, ViLegalNLI, LegalSLM)};
-
+ 
     \draw [arrow] (wp1) -- node[above, font=\tiny, align=center] {Reranked\\Candidates} (wp3);
     \draw [arrow] (wp2) -- node[below, font=\tiny, align=center] {Unlearned\\Filters} (wp3);
     \draw [arrow] (wp1) -- node[left, font=\tiny] {Active Index} (wp2);
@@ -30,35 +30,43 @@ The dependency flow between the three Work Packages is illustrated in Figure~\re
 \end{figure}
 
 \subsection{Detailed Implementation Timeline}
-The project spans a 6-month duration. Table~\ref{tab:gantt_timeline} illustrates the Gantt timeline of research tasks mapped across the project months.
+The project spans a 6-month duration. The timeline of research tasks mapped across the project months is structured as follows:
 
-\begin{table}[H]
-\centering
-\caption{Monthly Gantt Chart Timeline (Month 1 to Month 6).}
-\label{tab:gantt_timeline}
-\small
-\setlength{\tabcolsep}{3pt}
-\begin{tabularx}{\textwidth}{l|c|c|c|c|c|c}
-\hline
-\textbf{Research Task / Month} & \textbf{M1} & \textbf{M2} & \textbf{M3} & \textbf{M4} & \textbf{M5} & \textbf{M6} \\
-\hline
-\textbf{WP1: Selective RAG Memory} & & & & & & \\
--- Task 1.1: Corpus Acquisition \& Ingestion & \textbullet & & & & & \\
--- Task 1.2: Metadata \& Citation Graph Indexing & \textbullet & \textbullet & & & & \\
--- Task 1.3: Importance \& Consolidation Model & & \textbullet & \textbullet & & & \\
-\hline
-\textbf{WP2: Controllable Unlearning} & & & & & & \\
--- Task 2.1: Forget Taxonomy \& $P$ Policy Setup & & & \textbullet & & & \\
--- Task 2.2: $Q$ Prompt Constraints Integration & & & & \textbullet & \textbullet & \\
--- Task 2.3: Compliance Filtering \& Auditing & & & & & \textbullet & \\
-\hline
-\textbf{WP3: Benchmarking \& Validation} & & & & & & \\
--- Task 3.1: Baseline Setup \& Evaluators & & \textbullet & \textbullet & & & \\
--- Task 3.2: Ablation Studies \& Tuning & & & & \textbullet & \textbullet & \\
--- Task 3.3: Final Validation \& Report Writing & & & & & \textbullet & \textbullet \\
-\hline
-\end{tabularx}
-\end{table}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Month 1 (M1): Initial Indexing \& Ingestion}
+    \begin{itemize}
+        \item Task 1.1: Corpus Acquisition \& Ingestion (WP1)
+        \item Task 1.2: Metadata \& Citation Graph Indexing (WP1)
+    \end{itemize}
+    \item \textbf{Month 2 (M2): Indexing Completion \& Baseline Setup}
+    \begin{itemize}
+        \item Task 1.2: Metadata \& Citation Graph Indexing (WP1)
+        \item Task 1.3: Importance \& Consolidation Model (WP1)
+        \item Task 3.1: Baseline Setup \& Evaluators (WP3)
+    \end{itemize}
+    \item \textbf{Month 3 (M3): Modeling Memory \& Initial Benchmarking}
+    \begin{itemize}
+        \item Task 1.3: Importance \& Consolidation Model (WP1)
+        \item Task 2.1: Forget Taxonomy \& $P$ Policy Setup (WP2)
+        \item Task 3.1: Baseline Setup \& Evaluators (WP3)
+    \end{itemize}
+    \item \textbf{Month 4 (M4): Unlearning Integration \& Ablation Studies}
+    \begin{itemize}
+        \item Task 2.2: $Q$ Prompt Constraints Integration (WP2)
+        \item Task 3.2: Ablation Studies \& Tuning (WP3)
+    \end{itemize}
+    \item \textbf{Month 5 (M5): Unlearning Completion \& Tuning}
+    \begin{itemize}
+        \item Task 2.2: $Q$ Prompt Constraints Integration (WP2)
+        \item Task 2.3: Compliance Filtering \& Auditing (WP2)
+        \item Task 3.2: Ablation Studies \& Tuning (WP3)
+        \item Task 3.3: Final Validation \& Report Writing (WP3)
+    \end{itemize}
+    \item \textbf{Month 6 (M6): Final Validation \& Thesis Submission}
+    \begin{itemize}
+        \item Task 3.3: Final Validation \& Report Writing (WP3)
+    \end{itemize}
+\end{itemize}
 
 The corresponding weekly milestones are structured as follows:
 \begin{itemize}
@@ -73,20 +81,27 @@ The corresponding weekly milestones are structured as follows:
 \end{itemize}
 
 \subsection{Risk Assessment and Mitigation Strategies}
-Table~\ref{tab:risk_assessment} outlines potential technical and operational risks identified for this project, along with corresponding preventive and mitigation actions.
+To ensure the smooth execution of the project, potential technical and operational risks are identified along with corresponding mitigation strategies:
 
-\begin{table}[H]
-\centering
-\caption{Project Risk Assessment and Mitigation Matrix.}
-\label{tab:risk_assessment}
-\begin{tabularx}{\textwidth}{lXX}
-\hline
-\textbf{Identified Risk} & \textbf{Impact \& Probability} & \textbf{Mitigation Strategy} \\
-\hline
-Metadata Inaccuracy & High Impact / Moderate Probability & Implement a double-pass manual verification check on a randomized sample of 5\% of the ingested legal documents. \\
-Retrieval Recall Failure & High Impact / Low Probability & Integrate hybrid search (combining dense bi-encoder with sparse BM25) to act as a fallback retrieval mechanism. \\
-Compute Bottleneck & Moderate Impact / Moderate Probability & Pre-compute dense embeddings offline and restrict hyperparameter tuning search grids via Bayesian optimization. \\
-Access Restriction Leakage & High Impact / Low Probability & Conduct automated validation audits on the access-control filter policy before deploying index updates. \\
-\hline
-\end{tabularx}
-\end{table}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Risk 1: Metadata Inaccuracy}
+    \begin{itemize}
+        \item \textit{Impact \& Probability:} High Impact / Moderate Probability
+        \item \textit{Mitigation Strategy:} Implement a double-pass manual verification check on a randomized sample of 5\% of the ingested legal documents to validate validity dates and citation links.
+    \end{itemize}
+    \item \textbf{Risk 2: Retrieval Recall Failure}
+    \begin{itemize}
+        \item \textit{Impact \& Probability:} High Impact / Low Probability
+        \item \textit{Mitigation Strategy:} Integrate a hybrid search mechanism (combining dense bi-encoder embeddings with sparse BM25 keyword matching) to act as a robust fallback.
+    \end{itemize}
+    \item \textbf{Risk 3: Computational Bottleneck}
+    \begin{itemize}
+        \item \textit{Impact \& Probability:} Moderate Impact / Moderate Probability
+        \item \textit{Mitigation Strategy:} Pre-compute dense embeddings offline and restrict the hyperparameter tuning search grids via Bayesian optimization.
+    \end{itemize}
+    \item \textbf{Risk 4: Access Restriction Leakage}
+    \begin{itemize}
+        \item \textit{Impact \& Probability:} High Impact / Low Probability
+        \item \textit{Mitigation Strategy:} Conduct automated validation audits on the access-control filter policies before deploying vector index updates.
+    \end{itemize}
+\end{itemize}

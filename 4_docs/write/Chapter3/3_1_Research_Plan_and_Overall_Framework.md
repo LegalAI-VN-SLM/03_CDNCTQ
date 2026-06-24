@@ -1,87 +1,109 @@
 # 3.1 Research Plan and Overall Framework  ↔ `3_Methods_Models/3_1_Research_Plan_and_Overall_Framework.tex`
 
-> Vai trò: khung tổng thể RAG bán-tham-số; định vị 2 trụ method (3.2 Selective Memory, 3.3 Unlearning). | Nguồn: `Zheng2026_AgentLifelongSurvey`, `Sumida2025_LUFY`, `Su2026_ReGrad` (đối chiếu), `Nguyen2025_VLQA`.
+> Vai trò: khung tổng thể **hybrid (RAG + LoRA)**; định vị 3 trụ method (3.2 Selective Memory, 3.3 Unlearning, 3.4 LoRA) + **data/sampling** + **experimental design**. | Nguồn: `11328884`, `Sumida_2025`, `su2026retrievablegradients...` (đối chiếu), `nguyen2025vlqa...`, `biderman2024loralearnsforgets`.
 
 ---
 
 ## 3.1.1 Tuyên bố thiết kế cốt lõi (cần thuộc lòng)
 
-> **Base LLM ĐÓNG BĂNG. Mọi tri thức pháp lý sống trong Knowledge Base (KB) phi tham số. Mọi thao tác "học / quên" = sửa KB hoặc chính sách truy xuất, KHÔNG đụng trọng số.**
+> **Base LLM ĐÓNG BĂNG.** Tri thức pháp lý (facts) sống trong **KB phi tham số (RAG)**; **hành vi/kỹ năng suy luận** học bằng **LoRA adapter** (IFT, low-rank, base frozen). Mọi thao tác "học/quên facts" = sửa KB hoặc policy truy xuất, KHÔNG đụng trọng số base.
 
-Hệ quả (đây là 3 lý do bảo vệ chính):
-1. **Không weight drift / không catastrophic forgetting** năng lực tổng quát — vì không cập nhật trọng số (đối lập CPT/CFT, xem `Kalajdzievski2024_ScalingForgetting`, `Gupta2023_CPT_Warmup`).
-2. **Cập nhật luật tức thì, rẻ** — thêm/sửa/xoá entry trong KB, không cần train lại.
-3. **Quên có chủ đích là thao tác bậc nhất** — gỡ/ẩn entry + ràng buộc đầu ra, thay vì gradient ascent đắt đỏ trên weight.
+Phân vai hybrid (xem `biderman2024loralearnsforgets`): **facts → RAG** (cập nhật/unlearn dễ, không drift) · **behavior → LoRA** (r cao hợp IFT, không nhồi fact).
+
+Hệ quả (3 lý do bảo vệ):
+1. **Không weight drift / không catastrophic forgetting** năng lực chung — base frozen (đối lập CPT/CFT, `kalajdzievski2024...`).
+2. **Cập nhật luật tức thì, rẻ** — thêm/sửa/xoá entry KB, không train lại.
+3. **Quên có chủ đích là thao tác bậc nhất** — gỡ/ẩn entry + ràng buộc đầu ra.
 
 ## 3.1.2 Đơn vị tri thức & lược đồ metadata
+KB = {u₁,…,u_N}. Mỗi đơn vị u_i (điều/khoản/án lệ):
 
-KB = {u₁, …, u_N}. Mỗi **đơn vị tri thức** u_i (điều/khoản luật hoặc án lệ) gắn:
+| Ký hiệu | Trường | Dùng cho |
+|---------|--------|----------|
+| e_i | embedding | retrieval |
+| v_i | validity ∈{0,1} | compliance gate (3.2), unlearning (3.3) |
+| [t_start,t_end] | khoảng hiệu lực | regime thời gian |
+| c_i | citation centrality | importance (3.2) |
+| ρ_i | risk/applicability | importance (3.2) |
+| H_i | access history | decay (3.2) |
+| acl_i | access control | unlearning sealed (3.3) |
 
-| Ký hiệu | Trường | Mô tả | Dùng cho |
-|---------|--------|-------|----------|
-| e_i | embedding | vector ngữ nghĩa | retrieval |
-| v_i | validity flag ∈ {0,1} | còn hiệu lực? | **compliance gate** (3.2), unlearning (3.3) |
-| [t_start, t_end] | khoảng hiệu lực | ngày có/hết hiệu lực | xử lý **regime theo thời gian** |
-| c_i | citation centrality | mức được dẫn chiếu trong citation graph | importance (3.2) |
-| ρ_i | risk/applicability | mức rủi ro/áp dụng | importance (3.2) |
-| H_i | access history | lịch sử truy vấn (timestamps) | consolidation/decay (3.2) |
-| acl_i | access control | công khai / hạn chế | unlearning sealed (3.3) |
-
-## 3.1.3 Kiến trúc & luồng dữ liệu
-
+## 3.1.3 Kiến trúc & luồng dữ liệu (hybrid)
 ```
-                 ┌─────────────────────── OFFLINE / INDEXING ───────────────────────┐
-  Văn bản luật → │ Chuẩn hoá đơn vị → Gán metadata (v, [t], c, ρ, acl) → Citation    │
-  + án lệ        │ graph → Embedding → KB có metadata                                  │
-                 └────────────────────────────────────────────────────────────────────┘
-                                              │
-  ┌──────────────────────────── ONLINE / INFERENCE ─────────────────────────────────┐
-  │ Query q (+ mốc thời gian t_q tuỳ chọn)                                            │
-  │     │                                                                            │
-  │     ▼                                                                            │
-  │ [Retriever] sim(q, e_i)                                                           │
-  │     │                                                                            │
-  │     ▼                                                                            │
-  │ [3.3 Unlearning gate] ── loại/ẩn entry theo forget-policy (P) ───────────────┐   │
-  │     │                                                                        │   │
-  │     ▼                                                                        │   │
-  │ [3.2 Selective Memory] re-rank theo importance I_i + compliance hard-gate    │   │
-  │     │                          (giữ luật còn hiệu lực dù I thấp)             │   │
-  │     ▼                                                                        │   │
-  │ Top-k context ──► [Frozen LLM + reasoning prompt + ràng buộc Q] ──► Câu trả lời │
-  │                                                                  (+ audit log) │
-  └────────────────────────────────────────────────────────────────────────────────┘
+OFFLINE: Văn bản luật+án lệ → chuẩn hoá đơn vị → metadata(v,[t],c,ρ,acl) → citation graph → embedding → KB
+         Legal instruction data (+replay 0.5%) → train LoRA (r=256, base frozen) → LoRA adapter   [3.4]
+ONLINE:  Query q (+t_q)
+         → [Retriever sim(q,e_i)]
+         → [3.3 Unlearning gate P]  (loại/ẩn entry cấm)
+         → [3.2 Selective Memory]   (re-rank importance + compliance hard-gate)
+         → top-k context
+         → [Base LLM + LoRA adapter + reasoning prompt + ràng buộc Q]   [3.4]
+         → Câu trả lời (+ audit log) → cập nhật access log (cho decay)
 ```
+Thứ tự: **P (unlearn) → compliance gate → selective re-rank → reasoning (base+LoRA)+Q**.
 
-Thứ tự quan trọng: **Unlearning gate (P) chạy trước** để entry cấm không bao giờ vào candidate set; **Selective re-rank** chạy sau trên tập hợp lệ; **ràng buộc Q** áp ở bước sinh.
-
-## 3.1.4 Vì sao RAG-centric, không phải ReGrad/parametric (luận cứ thiết kế)
-
-| Tiêu chí | CPT/CFT (parametric) | ReGrad (gradient bank, bán-tham-số tạm) | **RAG (đề tài)** |
-|----------|----------------------|------------------------------------------|------------------|
-| Weight drift / quên chung | Có (nặng) | Tránh được | **Không (frozen)** |
+## 3.1.4 Vì sao hybrid RAG+LoRA (không ReGrad/CPT thuần)
+| Tiêu chí | CPT/CFT | ReGrad | **RAG+LoRA (đề tài)** |
+|---|---|---|---|
+| Weight drift facts | có | không | **không (facts ở KB, base frozen)** |
 | Cập nhật luật | train lại | thêm gradient | **sửa KB tức thì** |
 | Unlearn | rất khó | khó | **gỡ entry — dễ** |
-| Độ trễ inference | nền | **cao** (áp gradient runtime) | nền + tra cứu |
-| Chiều sâu suy luận nội tại | cao | cao | **bị chặn bởi base LLM** ⚠️ |
+| Độ trễ inference | nền | cao | nền + tra cứu |
+| Reasoning behavior | trong weight | trong weight | **LoRA adapter (IFT)** |
 
-→ Đề tài ưu tiên *cập nhật liên tục + quên có chủ đích + chi phí thấp*, nên RAG là lựa chọn nhất quán. ReGrad giữ ở 2.4 làm **đối chiếu**, không phải method.
-
-## 3.1.5 Giả định & giới hạn (chủ động nêu để không bị hỏi bất ngờ)
-- (GĐ1) Chất lượng metadata hiệu lực đủ tin cậy — **rủi ro chính**, ảnh hưởng compliance.
-- (GĐ2) Retriever đủ tốt để đưa đúng điều luật vào context (lỗi retrieval → lỗi câu trả lời).
-- (GH1) Năng lực suy luận pháp lý bị chặn bởi base LLM (xem `Le2025_LegalSLM`: SLM tụt ~50% ở tam đoạn luận).
-- (GH2) Unlearning kiểm soát **grounding/trích dẫn**, không đảm bảo xoá tri thức trong weight (xem 3.3 + 3_0).
+## 3.1.5 Giả định & giới hạn
+- (GĐ1) Chất lượng metadata hiệu lực — **rủi ro chính**.
+- (GĐ2) Retriever đủ tốt (lỗi retrieval → lỗi answer).
+- (GH1) Reasoning chặn bởi base+LoRA (LegalSLM: syllogism ~0.5).
+- (GH2) Unlearning ở mức **behavioral** (grounding), không xoá parametric.
 
 ---
 
-## ❓ Câu hỏi có thể bị hỏi (section này)
+## 3.1.6 Data and Sampling Design (chọn mẫu & dữ liệu)
+> Phần *methodology* về dữ liệu. Chi tiết thực thi/threshold ở **Ch4** (cross-ref).
 
-**Q: Đề tài có gì mới khi RAG + unlearning + selective memory đều đã có người làm?**
-A: Đóng góp là **kết hợp + thích ứng miền + đánh giá**, không claim thuật toán RAG mới: (1) chuyển importance/forgetting từ hội thoại (LUFY) sang **đơn vị pháp lý** với importance đặc thù (citation + hiệu lực + rủi ro) và **compliance gate theo hiệu lực**; (2) hợp nhất selective memory + unlearning trong một khung, xử lý **regime pháp lý theo thời gian**; (3) bộ **metric/benchmark legal-CL tiếng Việt**.
+**Nguồn dữ liệu (corpora):**
+- Văn bản quy phạm + án lệ công khai VN (~2005→nay), chuẩn hoá thành đơn vị + metadata.
+- KB truy xuất: **VLQA** (59k điều luật) `nguyen2025vlqa...`.
 
-**Q: RAG chỉ là chắp vá, sao không dạy hẳn model thuộc luật?**
-A: CPT/CFT gây quên năng lực chung + weight drift (dẫn `Kalajdzievski2024_ScalingForgetting`), tốn compute, và *không thể unlearn* khi luật đổi/sealed. Mục tiêu đề tài là cập nhật liên tục + quên có chủ đích → RAG (semi-parametric có chủ đích) hợp hơn, không phải chắp vá.
+**Datasets đánh giá (mẫu tác vụ):**
+| Dataset | Task | Vai trò |
+|---|---|---|
+| VLQA | legal QA + retrieval | KB + đo Recall@K/MRR/accuracy |
+| ViLegalNLI | legal NLI | đo suy luận (đã lọc lexical shortcut) |
+| LegalSLM | QA/NLI/syllogism | đo lập luận đa bước + baseline |
 
-**Q: Frozen LLM thì reasoning có đủ cho luật không?**
-A: Đây là giới hạn đã biết (GH1). Selective RAG cải thiện *chất lượng context* (đúng điều, đúng hiệu lực) nên giảm lỗi do retrieve sai; nhưng reasoning bị chặn bởi base → chọn base instruct decoder-only đủ mạnh + reasoning-augmented prompting, và nêu rõ ở Limitations. Không over-claim.
+**Continual scenarios (cách lấy mẫu kịch bản):**
+- **Scenario A — Knowledge update:** thêm/sửa luật vào KB; tạo cặp regime trước/sau sửa (split theo `t`).
+- **Scenario B — Unlearning case:** chọn **forget set** (luật hết hiệu lực / sealed / personal) + **retain set** (truy vấn liên quan không bị quên) để đo harmlessness.
+- **Scenario C — Selective memory stress:** index lớn, kiểm decay/consolidation giữ compliance.
+
+**Sampling/validation:** chuyên gia kiểm metadata hiệu lực trên **mẫu ngẫu nhiên ~5%** (giảm rủi ro GĐ1); split forget/retain cân bằng theo topic (VLQA 9 nhóm).
+
+## 3.1.7 Experimental Design and Evaluation Metrics
+> Thiết kế *phương pháp* đánh giá. Ngưỡng nghiệm thu cụ thể + timeline ở **Ch4 (4.1, 4.3)**.
+
+**Baselines & variants (ablation tăng dần):**
+1. Static RAG (cùng base+LoRA, cùng KB) — mốc.
+2. + Selective memory (importance + decay) — H1.
+3. + Unlearning (P+Q) — H3.
+4. Đối chiếu: CPT/CFT (đo forgetting chung) — H2; ReGrad (tham chiếu 2.5).
+
+**Metrics (theo nhóm):**
+| Nhóm | Chỉ số |
+|---|---|
+| Accuracy/retrieval | Recall@K, MRR@10, QA/NLI accuracy, syllogism score |
+| Forgetting | FG% / BWT trên năng lực chung |
+| Compliance | % trả lời dùng luật còn hiệu lực; tránh luật bãi bỏ |
+| Unlearning | USR↑, ROUGE-L↓, harmlessness (retain acc), TPR@1%FPR↓ |
+| Cost | kích thước active index, độ trễ retrieval |
+
+**Map giả thuyết ↔ chỉ số** (chi tiết ở `Research_Core/3_RQ_Hypotheses_Design.md`): H1↔(accuracy+index+Recall); H2↔(FG/BWT vs CPT/CFT); H3↔(USR/ROUGE-L/harmlessness/TPR).
+
+---
+
+## ❓ Câu hỏi có thể bị hỏi
+**Q: Đề tài mới gì?** → kết hợp + thích ứng miền + đánh giá: legal importance + compliance gate; hợp nhất selective memory + unlearning + regime thời gian; benchmark legal-CL VN.
+**Q: Sao không CPT cho thuộc luật?** → CPT quên + drift + khó unlearn; facts ở RAG, behavior ở LoRA.
+**Q: LoRA cũng sửa weight, sao gọi frozen?** → **base frozen**; LoRA là adapter nhỏ *thêm vào*, tách rời được, học *behavior* không phải facts (xem 3.4).
+**Q: Frozen base thì reasoning đủ không?** → giới hạn đã biết (GH1); LoRA + selective context giảm lỗi; nêu rõ ở Limitations.
