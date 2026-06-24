@@ -1,4 +1,5 @@
 \section{Parameter-Efficient Fine-Tuning in Continual Learning}
+\label{sec:peft}
 
 Parameter-Efficient Fine-Tuning (PEFT), particularly Low-Rank Adaptation (LoRA) \parencite{hu2021loralowrankadaptationlarge}, has become a standard approach to adapt Large Language Models to specialized domains. LoRA operates by freezing the pre-trained weights $W_0 \in \mathbb{R}^{d \times k}$ and representing weight updates $\Delta W$ through the product of two low-rank matrices $B \in \mathbb{R}^{d \times r}$ and $A \in \mathbb{R}^{r \times k}$, where rank $r \ll \min(d, k)$. This formulation reduces the number of trainable parameters up to $10,000$ times, significantly lowering VRAM requirements.
 
