@@ -1,13 +1,17 @@
-# Thu hẹp testbed — ĐÃ CHỐT & ĐÃ ÁP VÀO .tex
+# Định vị phạm vi — KHÔNG thu hẹp scope; lao động/thuế = NGUỒN DATA cho kịch bản test
 
-> ✅ **CHỐT (2026-06-24):** testbed = **2 ngành** — **Lao động (primary)** + **Thuế (secondary)**. Giữ **6 tháng**. Framework vẫn domain-general.
-> Vai trò: Lao động = full corpus + cả 3 scenario A/B/C; Thuế = **slice cô đọng**, là task thứ 2 trong chuỗi tuần tự (Lao động → Thuế) để **đo catastrophic forgetting (Backward Transfer)** → đúng tinh thần Continual Learning, vẫn khả thi 6 tháng.
-> 3.4 multi-sector: **GIỮ SỐNG** (vì có 2 task tuần tự).
+> ✅ **CHỐT lại (2026-06-24, bản cuối):** **KHÔNG gói gọn** framework vào ngành nào. Framework **domain-general**.
+> Lao động & thuế **không phải scope/testbed** — chúng chỉ là **nơi lấy data để dựng kịch bản test** (update / forgetting / unlearning), chọn vì *biến động nhiều* (sửa, bãi bỏ, dữ liệu cá nhân).
+> Cần ≥2 sub-domain để **đo catastrophic forgetting** (chuỗi lao động→thuế, Backward Transfer). Phủ thêm ngành = *mở rộng dữ liệu*, không đổi bản chất. Giữ 6 tháng.
+> 3.4 sequential: **GIỮ SỐNG** (là kịch bản test 2-task).
 >
-> **Đã sửa các file:** `1_4` (Data Subject + Sectoral Scope item) · `1_2` (Objective 3) · `05_Abstract` · `3_1` (Sampling + Threats to Validity: thêm sector-coverage) · `3_4` (ví dụ sequential = Lao động→Thuế) · `4_3` (WP1 + Milestone 1) · `4_1` (Deliverable 3 + threshold forgetting).
+> **Đã áp framing "data scenario" vào .tex:** `1_4` (Data Subject + mục *Evaluation Data Scenarios*) · `1_2` (Obj 3) · `05_Abstract` · `3_1` (Sampling + Threats: *scenario coverage*) · `3_4` (sequential test scenario) · `4_3` (WP1 + Milestone 1) · `4_1` (Deliverable 3).
+> **Đã đồng bộ slide + note:** report `00,01,03,04,05,06` · `research_approach/02`.
+>
+> ⚠️ Lý do đổi: framing "testbed thu hẹp 2 ngành" lúc trước **bị coi là gói gọn quá** → reviewer dễ chê hẹp. Sửa thành "*nguồn data cho kịch bản test*" để giữ novelty general mà vẫn khả thi.
 >
 > ---
-> _Bản dự định gốc (giữ lại để tham chiếu) — lúc đầu định 1 ngành:_
+> _Bên dưới là các bản dự định cũ (1 ngành → 2 ngành testbed), giữ lại để tham chiếu tiến trình:_
 
 ---
 

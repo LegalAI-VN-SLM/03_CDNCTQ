@@ -29,8 +29,8 @@ The primary objective of this research is to develop a robust, compliant, and co
         \item \textit{Description:} An evaluation pipeline configured to run baseline models and proposed modules on public Vietnamese legal NLP datasets.
         \item \textit{Quantitative Acceptance Thresholds:}
         \begin{itemize}
-            \item Successful deployment and testing on VLQA \parencite{nguyen2025vlqacomprehensivelargehighquality}, ViLegalNLI \parencite{duong2026vilegalnlinaturallanguageinference}, and LegalSLM \parencite{le-etal-2025-overview} datasets, instantiated on the labour-law (primary) and tax-law (secondary) testbed.
-            \item A cross-sector sequential evaluation (labour~$\rightarrow$~tax) that quantifies catastrophic forgetting via Backward Transfer, with the proposed RAG-centric framework targeting near-zero factual forgetting of the labour-law task relative to a parametric continual-tuning baseline.
+            \item Successful deployment and testing on VLQA \parencite{nguyen2025vlqacomprehensivelargehighquality}, ViLegalNLI \parencite{duong2026vilegalnlinaturallanguageinference}, and LegalSLM \parencite{le-etal-2025-overview} datasets, with test scenarios sourced from data-rich legal sub-domains such as labour and tax law.
+            \item A cross-domain sequential evaluation (e.g.\ labour~$\rightarrow$~tax) that quantifies catastrophic forgetting via Backward Transfer, with the proposed RAG-centric framework targeting near-zero factual forgetting of the earlier sub-domain relative to a parametric continual-tuning baseline.
         \end{itemize}
     \end{itemize}
 \end{itemize}

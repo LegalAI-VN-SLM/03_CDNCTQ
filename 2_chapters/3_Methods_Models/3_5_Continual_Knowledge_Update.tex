@@ -10,16 +10,16 @@ New or amended legal documents are ingested both on a schedule (periodic crawlin
 \centering
 \begin{tikzpicture}[
   font=\footnotesize, node distance=0.8cm and 1.3cm,
-  step/.style={rectangle, rounded corners, draw, align=center, text width=3.4cm, minimum height=0.8cm},
+  pipelineStep/.style={rectangle, rounded corners, draw, align=center, text width=3.4cm, minimum height=0.8cm},
   dec/.style={diamond, aspect=2.2, draw, align=center, inner sep=1pt, text width=2.0cm, font=\scriptsize},
   good/.style={rectangle, rounded corners, draw, align=center, text width=2.6cm, fill=green!8},
   bad/.style={rectangle, rounded corners, draw, align=center, text width=2.6cm, fill=red!8},
   arr/.style={-{Stealth[length=2mm]}, thick}
 ]
-\node[step] (n) {New / amended document};
-\node[step, below=of n] (ing) {Segment + tag metadata + embed (upsert)};
-\node[step, below=of ing] (sup) {Supersession: old unit $v{=}0$, $t_{\text{end}}$, link};
-\node[step, below=of sup] (cg) {Citation-graph delta $\to$ recompute $c_i$ (local)};
+\node[pipelineStep] (n) {New / amended document};
+\node[pipelineStep, below=of n] (ing) {Segment + tag metadata + embed (upsert)};
+\node[pipelineStep, below=of ing] (sup) {Supersession: old unit $v{=}0$, $t_{\text{end}}$, link};
+\node[pipelineStep, below=of sup] (cg) {Citation-graph delta $\to$ recompute $c_i$ (local)};
 \node[dec, below=of cg] (canary) {Canary set pass?};
 \node[good, left=of canary] (commit) {Commit KB version $v_{N+1}$};
 \node[bad, right=of canary] (rollback) {Rollback + alert};

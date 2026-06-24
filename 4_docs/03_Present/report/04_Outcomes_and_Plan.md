@@ -3,7 +3,7 @@
 ## Slide 1 — Deliverables ↔ acceptance thresholds (đo được)
 - **Obj 1 — Selective memory module:** active index **giảm ≥30%** vs static RAG; **Recall@10 trong ±2%** so full-index.
 - **Obj 2 — Unlearning gate (P+Q):** **ROUGE-L ≤0.15** trên forget set; **harmlessness ≥95%** baseline; **TPR ≤1% @1%FPR** dưới jailbreak.
-- **Obj 3 — Evaluation suite:** chạy được trên **VLQA / ViLegalNLI / LegalSLM**, instantiate trên testbed **lao động (primary) + thuế (secondary)**; thêm eval **cross-sector tuần tự lao động→thuế** đo Backward Transfer (target near-zero factual forgetting vs parametric baseline).
+- **Obj 3 — Evaluation suite:** chạy được trên **VLQA / ViLegalNLI / LegalSLM**; test scenarios **lấy data từ** sub-domain biến động nhiều (lao động, thuế); thêm eval **cross-domain tuần tự lao động→thuế** đo Backward Transfer (target near-zero factual forgetting vs parametric baseline).
 
 💬 Kể: "Mỗi mục tiêu gắn ngưỡng số → nghiệm thu khách quan."
 📌 `nguyen2025vlqa...`, `duong2026vilegalnli...`, `le-etal-2025-overview`
@@ -19,7 +19,7 @@
 - **Cơ quan tuân thủ/bảo mật:** ngân hàng, toà án, công ty luật — đảm bảo không rò rỉ/không viện dẫn thông tin mật hoặc luật hết hiệu lực.
 
 ## Slide 4 — Work packages & timeline (6 tháng)
-- **WP1 Selective RAG memory** (crawl/parse/index, citation graph, importance + decay) — crawl **scoped 2 ngành**: lao động full + thuế slice → khả thi trong 6 tháng.
+- **WP1 Selective RAG memory** (crawl/parse/index, citation graph, importance + decay) — crawl **ưu tiên** sub-domain biến động nhiều (lao động, thuế) cung cấp kịch bản test; **pipeline domain-general**.
 - **WP2 Unlearning gate** (P+Q, compliance filter, audit log).
 - **WP3 Benchmark & validation** (static-RAG baseline, ablation, VLQA/ViLegalNLI/LegalSLM).
 - 8 milestone theo tuần (corpus W3 → KB W5 → baseline W9 → modules W12 → tuning W15 → unlearning W18 → benchmark W21 → report W24).

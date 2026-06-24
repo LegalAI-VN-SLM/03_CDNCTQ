@@ -49,7 +49,7 @@
 📌 `biderman2024loralearnsforgets`, `hu2021lora...`, `wang-etal-2023-orthogonal`, `han-etal-2025-slim`
 
 ## Slide 7 — Data methodology pipeline (FIGURE)
-- **Collection** → **Preprocessing/Indexing** (units+metadata+citation graph+embedding) → **Sampling** (2 sector testbed **lao động/thuế**, topic-stratified trong từng ngành; chuỗi tuần tự lao động→thuế đo Backward Transfer; forget↔retain matched; regime split; Scenario A/B/C chủ yếu trên lao động) → **Analysis** (ablation ladder; metrics; test H1–H3; error analysis).
+- **Collection** → **Preprocessing/Indexing** (units+metadata+citation graph+embedding) → **Sampling** (topic-stratified tổng quát; **kịch bản test lấy data từ** sub-domain biến động nhiều — lao động/thuế; chuỗi tuần tự lao động→thuế đo Backward Transfer; forget↔retain matched; regime split; Scenario A/B/C) → **Analysis** (ablation ladder; metrics; test H1–H3; error analysis).
 - Expert validate **5%** metadata (giảm rủi ro chính).
 
 💬 Kể: chỉ figure pipeline, nhấn "chọn mẫu – thu thập – phân tích" đủ bộ ba.

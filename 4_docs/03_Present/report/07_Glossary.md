@@ -31,7 +31,7 @@
 
 ## C. Phương pháp của đề tài
 - **RAG (Retrieval-Augmented Generation)** — Thay vì bắt mô hình "nhớ hết", ta *tra cứu* tài liệu liên quan rồi đưa vào cho nó trả lời. 🔸 Như luật sư tra tủ hồ sơ trước khi tư vấn.
-- **Parametric / Non-parametric / Semi-parametric** — *Parametric* = kiến thức nằm trong trọng số (trong "não"); *non-parametric* = nằm ngoài (kho tra cứu); *semi-parametric* = kết hợp cả hai.
+- **Parametric / Non-parametric / Semi-parametric** — Phân biệt **kiến thức lưu ở đâu**. *Parametric* = nằm **trong trọng số (weights)** của mô hình — muốn thêm/sửa/gỡ luật phải **train lại**, dễ **quên thảm khốc** (vd CPT, CIT, fine-tune, ReGrad). *Non-parametric* = nằm **ngoài**, ở kho tra cứu (RAG) — sửa luật = **sửa cơ sở dữ liệu**, không đụng mô hình nên **không quên**. *Semi-parametric* = kết hợp cả hai. 🔸 *Parametric* = "học thuộc vào đầu"; *non-parametric* = "tra sổ tay". ⚠️ **LoRA cũng là tham số** nhưng chỉ học *hành vi*, không chứa facts → đề tài là *hybrid*: non-parametric cho facts + chút parametric (LoRA) cho behavior.
 - **PEFT** — Nhóm kỹ thuật tinh chỉnh *tiết kiệm*, chỉ chỉnh một phần nhỏ thay vì cả mô hình.
 - **LoRA (Low-Rank Adaptation)** — Một kiểu PEFT: gắn thêm một "miếng vá" nhỏ để dạy *hành vi/cách làm*, giữ nguyên mô hình gốc. 🔸 Như dán sticky-note hướng dẫn lên cuốn sách mà không sửa sách.
 - **O-LoRA / N-LoRA / SLIM / MoE** — Các biến thể LoRA giúp học *nhiều việc tuần tự* mà không đè lên nhau (mỗi việc một "ngăn" riêng).

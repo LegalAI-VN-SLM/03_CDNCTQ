@@ -50,7 +50,7 @@
 💬 Kể: mỗi câu hỏi gắn 1 giả thuyết **bác bỏ được** → nghiên cứu nghiêm túc.
 
 ## Slide 7 — Scope & contributions
-- **Scope:** luật VN (bộ luật, nghị định, thông tư, án lệ); tasks QA/NLI/reasoning; không generation dài. **Testbed thu hẹp = lao động (primary, đủ 3 scenario) + thuế (secondary, slice cô đọng, là task thứ 2 đo forgetting)**; framework domain-general, mở rộng ngành khác = future work.
+- **Scope:** luật VN (bộ luật, nghị định, thông tư, án lệ); tasks QA/NLI/reasoning; không generation dài. Framework **domain-general, không bó vào ngành nào**; **kịch bản test lấy data từ** sub-domain biến động nhiều (lao động, thuế) để dựng ca update / forgetting / unlearning.
 - **3 đóng góp:** (1) legal selective memory (mở rộng Ebbinghaus sang luật + compliance gate); (2) retrieval-level unlearning gate (P+Q); (3) benchmark/protocol legal-CL VN.
 - **💡 Significance:** *KH* — nối CL + RAG + legal temporal regimes cho low-resource VN; *thực tiễn* — trợ lý pháp lý tuân thủ, độ trễ thấp.
 📌 `nguyen2025vlqa...`, `duong2026vilegalnli...`, `le-etal-2025-overview`

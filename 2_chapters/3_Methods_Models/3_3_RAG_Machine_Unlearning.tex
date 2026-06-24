@@ -19,7 +19,7 @@ Different legal scenarios necessitate different intensities of unlearning. The p
     \item \textbf{Index Deletion (Hard Unlearning):} Triggered by personal data removal requests (Right to be Forgotten). The targeted knowledge unit $u_i$ is permanently pruned from the vector database and citation graph, ensuring it cannot be recovered.
 \end{enumerate}
 
-\subsection{The $P + Q$ Unlearning Optimization Framework}
+\subsection{\texorpdfstring{The $P + Q$ Unlearning Optimization Framework}{The P + Q Unlearning Optimization Framework}}
 To implement controllable behavioral unlearning, we adopt the dual-component $P+Q$ optimization framework proposed in recent RAG unlearning studies \parencite{11207222}. For a target concept or document set $T$ to be forgotten, the system applies two simultaneous updates:
 \begin{itemize}
     \item \textbf{Retriever Policy $P$ (Non-Parametric Control):} Modifies the active search space of the retriever. For any query $q$, the retriever operates on a dynamically restricted knowledge base:

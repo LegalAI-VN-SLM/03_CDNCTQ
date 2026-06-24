@@ -43,10 +43,10 @@
 → Cùng base+LoRA+KB, chỉ khác module selective/unlearning → cô lập đóng góp.
 
 **Q: 6 tháng làm nổi không?**
-→ Timeline tuần + 8 milestone + bảng rủi ro; phạm vi giới hạn QA/NLI/reasoning; **testbed thu hẹp còn 2 ngành (lao động full + thuế slice)** → khối lượng dữ liệu vừa phải, khả thi trong 6 tháng.
+→ Timeline tuần + 8 milestone + bảng rủi ro; phạm vi giới hạn QA/NLI/reasoning; **kịch bản test tập trung vào sub-domain biến động nhiều (lao động, thuế)** → khối lượng dữ liệu thực nghiệm vừa phải, khả thi 6 tháng (framework vẫn **domain-general**).
 
-**Q: Sao chỉ làm 2 ngành (lao động + thuế)? Có quá hẹp / quá rộng không?**
-→ Framework **domain-general**; 2 ngành chỉ là **testbed minh chứng**. Chọn 2 (không phải 1) vì đề tài là *Continual Learning* — cần ≥2 task tuần tự để **đo catastrophic forgetting** thật (lao động→thuế, Backward Transfer); 1 ngành thì không demo được "học mới quên cũ". Không làm 3+ ngành vì 6 tháng → ưu tiên **1 ngành sâu (lao động, đủ 3 scenario) + 1 slice (thuế)** cho khả thi. Mở rộng ngành khác = **future work** (đã ghi ở Scope + Threats to Validity).
+**Q: Phạm vi luật có hẹp/rộng quá không? Sao lại lao động + thuế?**
+→ Framework **domain-general, không bó vào ngành nào**. Lao động & thuế **không phải scope** — chúng chỉ là **nơi lấy data để dựng kịch bản test**, chọn vì *biến động nhiều* (sửa/bãi bỏ + dữ liệu cá nhân) nên cho ca **update / unlearning / forgetting** tự nhiên. Cần ≥2 sub-domain để **đo catastrophic forgetting** thật (chuỗi lao động→thuế, Backward Transfer) — 1 cái thì không demo được "học mới quên cũ". Phương pháp áp dụng được cho ngành khác; phủ thêm ngành chỉ là *mở rộng dữ liệu*, không đổi bản chất.
 
 **Q: Không cập nhật data thì retrieval hỏng dần — chiến lược là gì?** (Section 3.5)
 → **Incremental Update Pipeline**: crawl/event → upsert đơn vị mới → **supersession** (luật cũ `v=0`, = temporal unlearning) → citation-graph delta → **canary test** → commit/rollback, có versioning + audit. Base frozen ⇒ update rẻ, không retrain. **Phần embedding-drift detection + crawl/versioning là future work làm khi bắt đầu triển khai** (chưa đi sâu).

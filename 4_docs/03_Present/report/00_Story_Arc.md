@@ -3,7 +3,7 @@
 > Folder này đúc kết từ `.tex` Chương 1–4 thành **vật liệu sinh slide**. Mỗi file = một khối; mỗi `## Slide` = một slide gợi ý (tiêu đề + bullet tiếng Anh sẵn dùng + 💬 cách kể tiếng Việt + 📌 dẫn chứng).
 
 ## One-liner (câu chốt của cả đề tài)
-> *Tri thức pháp lý biến động nhanh; LLM phải **cập nhật liên tục** và **quên có chủ đích** mà **không quên thảm khốc**. Giải pháp: **đóng băng base LLM**, đẩy **facts** vào **bộ nhớ RAG chọn lọc + unlearn được**, dùng **LoRA cho hành vi** — cho **luật tiếng Việt** (framework domain-general; testbed = **lao động (primary) + thuế (secondary)**, hai task tuần tự để đo catastrophic forgetting).*
+> *Tri thức pháp lý biến động nhanh; LLM phải **cập nhật liên tục** và **quên có chủ đích** mà **không quên thảm khốc**. Giải pháp: **đóng băng base LLM**, đẩy **facts** vào **bộ nhớ RAG chọn lọc + unlearn được**, dùng **LoRA cho hành vi** — cho **luật tiếng Việt** (framework **domain-general, không gói gọn ngành nào**; lao động & thuế chỉ là **nguồn data để dựng kịch bản test**: update / forgetting / unlearning).*
 
 ## Mạch kể 8 nhịp (deck flow)
 | # | Nhịp | File |
