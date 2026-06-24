@@ -3,7 +3,7 @@
 \subsection{Work Package Breakdown and Implementation Strategy}
 The execution of the proposed research is organized into three unified Work Packages (WPs) to ensure a systematic progression from data collection to pipeline development, validation, and documentation:
 \begin{itemize}
-    \item \textbf{WP1: Selective RAG Memory System:} Coordinates the crawl and structured parsing of Vietnamese legal documents, indexing them with dense bi-encoder models, constructing citation graphs, and implementing the dynamic legal importance and Ebbinghaus-based consolidation and decay rerankers.
+    \item \textbf{WP1: Selective RAG Memory System:} Coordinates the crawl and structured parsing of Vietnamese legal documents---scoped to the two testbed sectors (labour law in full as the primary corpus, and a curated tax-law slice as the secondary) so that ingestion remains feasible within six months---indexing them with dense bi-encoder models, constructing citation graphs, and implementing the dynamic legal importance and Ebbinghaus-based consolidation and decay rerankers.
     \item \textbf{WP2: Controllable Legal Unlearning Gate:} Implements the $P+Q$ optimization policies for forget requests, output compliance filtering, and the immutable logging audits to ensure regulatory safety.
     \item \textbf{WP3: System Benchmarking and Validation:} Sets up static RAG baselines, executes ablation studies on the importance features, measures unlearning effectiveness and robustness, and evaluates accuracy on Vietnamese datasets like VLQA \parencite{nguyen2025vlqacomprehensivelargehighquality}, ViLegalNLI \parencite{duong2026vilegalnlinaturallanguageinference}, and LegalSLM \parencite{le-etal-2025-overview}.
 \end{itemize}
@@ -70,7 +70,7 @@ The project spans a 6-month duration. The timeline of research tasks mapped acro
 
 The corresponding weekly milestones are structured as follows:
 \begin{itemize}
-    \item \textit{Milestone 1 (Week 3):} Complete legal corpus compilation and normalization.
+    \item \textit{Milestone 1 (Week 3):} Complete legal corpus compilation and normalization for the labour-law (primary) and tax-law (secondary) testbed sectors.
     \item \textit{Milestone 2 (Week 5):} Complete dense embedding generation and initial indexing.
     \item \textit{Milestone 3 (Week 9):} Functioning baseline static RAG pipeline with metadata validity filtering.
     \item \textit{Milestone 4 (Week 12):} Deployment of Selective Memory and Unlearning modules.

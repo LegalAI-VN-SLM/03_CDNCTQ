@@ -55,6 +55,17 @@
 **F1. 6 tháng làm hết nổi không?** → có timeline tuần chi tiết (`2_Timeline_6_thang.md`), 8 milestone, bảng rủi ro; phạm vi giới hạn QA/NLI/reasoning, luật VN, không generation dài.
 **F2. Cần chốt gì để chạy?** → base LLM, danh mục forget request, mốc regime pháp lý, ngưỡng nghiệm thu (đã đánh dấu trong các file).
 
+## G. Câu hỏi từ mô phỏng hội đồng (ars-reviewer, Ch2+Ch3 — quyết định: MAJOR REVISION)
+> Trả lời đầy đủ + cách "đỡ": `4_docs/03_Present/report/06_Reviewer_QA_Answers.md`.
+- **G1 (DA, CRITICAL) "Frozen mà vẫn LoRA — mâu thuẫn?"** → base *weights* frozen; LoRA = adapter behavior, facts ở RAG. ✅ đã sửa bảng 3.1 → "no *factual* drift".
+- **G2 (R2) "Metadata hiệu lực sai thì sập hệ?"** → rủi ro #1; nguồn từ chính văn bản + QC 5% + canary. ✅ đã thêm *Threats to Validity*.
+- **G3 (R3) "Unlearning chỉ behavioral, dễ jailbreak; số mượn English?"** → đúng phạm vi; cam kết **đo lại TPR trên VN**.
+- **G4 (DA) "ReGrad thắng accuracy sao loại?"** → giữ ReGrad làm **baseline định lượng** + **đo latency thật** (không phỏng đoán).
+- **G5 (R1) "Importance circular / ad hoc?"** → tune dev-set + ablation + eval unseen (đã ghi Threats to Validity).
+- **G6 (R1) "VLQA vừa KB vừa test?"** → decontaminate split, recall trên unseen.
+- **G7 (EIC) "Novelty cốt lõi?"** → synthesis + 2 construct mới (legal importance, temporal regime) + benchmark VN.
+- **G8 (R2/DA) "Reasoning ceiling (syllogism)?"** → giới hạn đã biết (GH1); selective RAG cải thiện *context*; reasoning sâu = future work.
+
 ---
 
 ### Checklist tự tin trước bảo vệ
