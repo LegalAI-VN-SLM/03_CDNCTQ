@@ -31,7 +31,7 @@
 💬 Kể (góc sâu): "Forgetting ở đây là **giảm nhiễu index**, KHÔNG giảm coverage — validity là *bất biến cứng*, importance chỉ xếp hạng trong tập hợp lệ."
 📌 cảm hứng `Sumida_2025`; Algorithm `alg:selective`
 
-## Slide 5 — Module 2: Controllable Unlearning (P+Q)
+## Slide 5 — (Phụ) Controllable Unlearning (P+Q) — temporal gating khi supersession
 - 3 loại forget: **Temporal gating** (luật hết hiệu lực, vẫn trả lời "tại 20XX") · **Access-control** (sealed, theo `acl`) · **Index deletion** (personal data).
 - **P (retrieval):** $KB_T=\{u\notin T \wedge \mathrm{Authorize}(u,q,t_q)\}$ — entry cấm không vào candidate.
 - **Q (output):** ràng buộc prompt không viện dẫn/không tiết lộ $T$ (chặn rò rỉ parametric).
@@ -43,7 +43,7 @@
 ## Slide 6 — Module 3: LoRA behavioural adapter (vì sao cần)
 - Phân vai: **RAG = dùng điều luật nào; LoRA = lập luận thế nào** (syllogism: đại–tiểu tiền đề–kết luận, trích dẫn, tuân ràng buộc Q).
 - **Vì sao behavior chứ không facts:** SVD — CPT cần rank ~2000, **IFT chỉ ≤32** ⇒ LoRA (r=256) hợp IFT, không đủ nhớ facts.
-- Config: base instruct decoder-only frozen, r=256/α=512, replay 0.5%, (tuỳ chọn SAM); học tuần tự **lao động→thuế** (cấu hình 2-task tối thiểu để *thấy* forgetting) → chống collision bằng O-LoRA/N-LoRA/SLIM.
+- Config: base instruct decoder-only **frozen (1–4B, ≤15B — low-resource)**, r=256/α=512, replay 0.5%, (tuỳ chọn SAM); học tuần tự **lao động→thuế** (cấu hình 2-task tối thiểu để *thấy* forgetting) → chống collision bằng O-LoRA/N-LoRA/SLIM.
 
 💬 Kể: "LoRA dạy *cách lập luận pháp lý*, không nhồi luật vào trọng số — nên đổi luật không cần train lại."
 📌 `biderman2024loralearnsforgets`, `hu2021lora...`, `wang-etal-2023-orthogonal`, `han-etal-2025-slim`
@@ -55,16 +55,15 @@
 💬 Kể: chỉ figure pipeline, nhấn "chọn mẫu – thu thập – phân tích" đủ bộ ba.
 📌 Figure `fig:data_pipeline` (3.1)
 
-## Slide 8 — Why hybrid RAG+LoRA, not CPT/ReGrad (đánh đổi nói thẳng)
-| | CPT/CIT | ReGrad | **RAG+LoRA (đề tài)** |
-|---|---|---|---|
-| Quên chung | nặng | tránh | **không (frozen)** |
-| Cập nhật luật | train lại | thêm gradient | **sửa KB tức thì** |
-| Unlearn | rất khó | khó | **gỡ entry — dễ** |
-| Độ trễ | nền | **cao** | nền+tra cứu |
-| Reasoning | trong weight | trong weight | **base+LoRA (bị chặn bởi base)** ⚠️ |
+## Slide 8 — Bốn arm khi NẠP LIÊN TỤC (khuôn Bảng B ReGrad) — đánh đổi nói thẳng
+| | CPT/CIT | ReGrad | vanilla RAG | **selective RAG (đề tài)** |
+|---|---|---|---|---|
+| Khi kho/tri thức lớn dần | **quên thảm khốc** | tránh (đắt) | không quên weight, **nhiễu↑** | **giữ recall** |
+| Cập nhật luật | train lại | thêm gradient | sửa KB | **sửa KB tức thì** |
+| Chi phí | cao | **cao** (bank) | thấp | thấp |
+| Reasoning | trong weight | trong weight | base | **base (bị chặn)** ⚠️ |
 
-💬 Kể (tạo độ tin): "Đánh đổi thật: frozen ⇒ reasoning bị chặn bởi base. Ta giảm thiểu bằng LoRA + context chất lượng, và **nêu rõ ở Limitations**."
+💬 Kể (tạo độ tin): "CPT nạp nhiều = **sụp như Bảng B**; RAG né quên nhưng kho phình thì **nhiễu** → selective cứu. Đánh đổi thật: frozen ⇒ reasoning bị chặn bởi base — **nêu rõ ở Limitations**."
 📌 Table `tab:methodology_comparison` (3.1)
 
 ## Slide 9 — Continual knowledge update (giữ retrieval luôn tươi)

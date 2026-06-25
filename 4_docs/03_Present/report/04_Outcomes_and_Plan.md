@@ -1,9 +1,10 @@
 # 04 — Expected Outcomes & Plan
 
-## Slide 1 — Deliverables ↔ acceptance thresholds (đo được)
-- **Obj 1 — Selective memory module:** active index **giảm ≥30%** vs static RAG; **Recall@10 trong ±2%** so full-index.
-- **Obj 2 — Unlearning gate (P+Q):** **ROUGE-L ≤0.15** trên forget set; **harmlessness ≥95%** baseline; **TPR ≤1% @1%FPR** dưới jailbreak.
-- **Obj 3 — Evaluation suite:** chạy được trên **VLQA / ViLegalNLI / LegalSLM**; test scenarios **lấy data từ** sub-domain biến động nhiều (lao động, thuế); thêm eval **cross-domain tuần tự lao động→thuế** đo Backward Transfer (target near-zero factual forgetting vs parametric baseline).
+## Slide 1 — Kết quả mong đợi ↔ tiêu chí đo được
+- **R1 — Đường forgetting (nạp liên tục):** CPT **sụp** ở mức nạp cao (BWT âm, như Bảng B ReGrad); **RAG không quên** (perf ổn/tăng). Vẽ trên cả 3 task.
+- **R2 — Selective vs vanilla RAG:** kho phình → vanilla **tụt Recall@K**; selective giữ **±2%** + active index **↓≥30%**.
+- **R3 — Δ cải thiện theo task:** **QA > NLI > Syllogism** → bằng chứng **trần lập luận** (retrieval không thay được suy luận). Đối chiếu **ReGrad** (bán-tham số).
+- *(Phụ)* unlearning = temporal gating khi supersession.
 
 💬 Kể: "Mỗi mục tiêu gắn ngưỡng số → nghiệm thu khách quan."
 📌 `nguyen2025vlqa...`, `duong2026vilegalnli...`, `le-etal-2025-overview`
@@ -36,7 +37,7 @@
 - **Why needed:** luật biến động + phải "quên có chủ đích"; parametric → quên thảm khốc / khó unlearn.
 - **Why now:** data VN mới (2025–2026) + quy định siết → nền thực nghiệm + nhu cầu hội tụ.
 - **Why me:** đã làm **khóa luận về RAG** (miền thông tin trường ĐH) → nắm nền tảng, nay chuyển/mở rộng sang **miền luật** (khó hơn), dưới hướng dẫn GV chuyên NLP, dùng dataset VN công khai.
-- **Value:** zero-weight-drift + compliance-aware forgetting + reproducible protocol — novel về KH và có giá trị thực tiễn cho legal-AI VN.
+- **Value:** no factual (weight) drift + compliance-aware forgetting + reproducible protocol — novel về KH và có giá trị thực tiễn cho legal-AI VN.
 
 💬 Kể: slide chốt — đọc 4 gạch này là hội đồng nắm trọn giá trị + thấy bạn đủ năng lực.
 🔖 Liêm chính: AI chỉ hỗ trợ tìm/cấu trúc/ngôn ngữ; ý tưởng + framework + phân tích là của tác giả (xem Declaration).

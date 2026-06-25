@@ -39,18 +39,19 @@
 💬 Kể: "Tách bạch: facts ra ngoài (RAG), kỹ năng lập luận vào LoRA, base giữ nguyên."
 
 ## Slide 5 — Objectives
-- **General:** non-parametric RAG continual-learning framework cho QA/suy luận luật VN, base frozen.
-- **Specific:** (1) legal importance-based **selective memory**; (2) **controllable unlearning** (P+Q); (3) **evaluation protocol** legal-CL VN.
+- **General:** dùng **RAG phi-tham số (base frozen)** chống quên thảm khốc khi nạp tri thức luật liên tục, đo trên QA/NLI/Syllogism.
+- **Specific:** (1) **xây kho RAG chọn lọc** (importance + decay + compliance — như ReGrad xây bank nhưng phi-tham số); (2) **đo forgetting khi nạp liên tục** (RAG vs CPT vs ReGrad × 3 task); (3) **soi trần lập luận** (retrieval cứu QA/NLI tới đâu, có vượt syllogism không).
 
 ## Slide 6 — Research questions & hypotheses
-- **CQ1/H1 — Selective memory:** feature importance nào (citation/risk/temporal) giảm index + giữ accuracy?
-- **CQ2/H2 — RAG vs parametric:** RAG có giảm forgetting chung + xử lý regime thời gian tốt hơn CPT/CIT? (đo bằng chuỗi tuần tự **lao động→thuế**, chỉ số Backward Transfer)
-- **CQ3/H3 — Unlearning:** P+Q quên được tới đâu mà không hại truy vấn khác?
+- **H1 — Forgetting:** CPT nạp nhiều ⇒ **quên thảm khốc** (sụp như Bảng B ReGrad). Đo: BWT, perf↓.
+- **H2 — RAG né quên:** RAG base frozen **không quên trọng số**, perf ổn định theo lượng nạp.
+- **H3 — Selective cứu RAG:** kho phình → vanilla RAG tụt recall; **selective giữ recall** (index↓≥30%, ±2%).
+- **H4 — Trần lập luận:** RAG mạnh ở **QA** > NLI > **Syllogism** (retrieval không thay được suy luận).
 
-💬 Kể: mỗi câu hỏi gắn 1 giả thuyết **bác bỏ được** → nghiên cứu nghiêm túc.
+💬 Kể: mỗi giả thuyết **bác bỏ được bằng số** → nghiên cứu nghiêm túc. Khuôn lấy từ Bảng B của ReGrad (nạp liên tục → đo quên).
 
 ## Slide 7 — Scope & contributions
-- **Scope:** luật VN (bộ luật, nghị định, thông tư, án lệ); tasks QA/NLI/reasoning; không generation dài. Framework **domain-general, không bó vào ngành nào**; **kịch bản test lấy data từ** sub-domain biến động nhiều (lao động, thuế) để dựng ca update / forgetting / unlearning.
-- **3 đóng góp:** (1) legal selective memory (mở rộng Ebbinghaus sang luật + compliance gate); (2) retrieval-level unlearning gate (P+Q); (3) benchmark/protocol legal-CL VN.
+- **Scope:** luật VN; **3 task QA/NLI/Syllogism**; không generation dài. Framework **domain-general**; **kịch bản nạp liên tục lấy data từ** sub-domain biến động nhiều (lao động, thuế).
+- **3 đóng góp:** (1) **kho RAG chọn lọc** chống "quên kiểu RAG"; (2) **bằng chứng định lượng** RAG né quên thảm khốc trên 3 task luật VN (đối chiếu CPT/ReGrad); (3) **phát hiện trần lập luận** — retrieval cứu QA/NLI nhưng chạm trần syllogism.
 - **💡 Significance:** *KH* — nối CL + RAG + legal temporal regimes cho low-resource VN; *thực tiễn* — trợ lý pháp lý tuân thủ, độ trễ thấp.
 📌 `nguyen2025vlqa...`, `duong2026vilegalnli...`, `le-etal-2025-overview`

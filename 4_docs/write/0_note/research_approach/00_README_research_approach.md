@@ -1,5 +1,7 @@
 # Hướng tiếp cận — Lấy NGHIÊN CỨU làm trọng tâm (không phải engineering)
 
+> ⚠️ **CẬP NHẬT HƯỚNG (2026-06-24):** Trục trung tâm giờ là **CATASTROPHIC FORGETTING qua nạp-tri-thức-liên-tục** (khuôn Bảng B của ReGrad), đo trên **QA / NLI / Syllogism**. **Selective memory** = chống *quên-kiểu-RAG* (kho phình → recall tụt). **Unlearning** hạ xuống *temporal-gating phụ*. Nguồn chuẩn: [redirect_rag_3tasks.md](../redirect_rag_3tasks.md). Phần "research vs engineering" bên dưới vẫn đúng, đọc theo cấu trúc mới.
+
 > **Mục đích bộ note này:** chốt lại *đâu là phần nghiên cứu thật* (có giả thuyết, đo được, **có thể bị bác bỏ**) và *đâu chỉ là code* (deterministic, không có gì để thí nghiệm). Đây là phản ứng trực tiếp với các câu hỏi xoáy:
 > - "RAG đã có nhiều rồi, em khác gì?"
 > - "Xoá entry khỏi index thì RAG nào chả làm được — đâu phải hướng mới?"

@@ -3,7 +3,7 @@
 > Folder này đúc kết từ `.tex` Chương 1–4 thành **vật liệu sinh slide**. Mỗi file = một khối; mỗi `## Slide` = một slide gợi ý (tiêu đề + bullet tiếng Anh sẵn dùng + 💬 cách kể tiếng Việt + 📌 dẫn chứng).
 
 ## One-liner (câu chốt của cả đề tài)
-> *Tri thức pháp lý biến động nhanh; LLM phải **cập nhật liên tục** và **quên có chủ đích** mà **không quên thảm khốc**. Giải pháp: **đóng băng base LLM**, đẩy **facts** vào **bộ nhớ RAG chọn lọc + unlearn được**, dùng **LoRA cho hành vi** — cho **luật tiếng Việt** (framework **domain-general, không gói gọn ngành nào**; lao động & thuế chỉ là **nguồn data để dựng kịch bản test**: update / forgetting / unlearning).*
+> *Khi tri thức pháp lý được **nạp liên tục**, tinh chỉnh trọng số (parametric) **quên thảm khốc**; đề tài dùng **RAG phi-tham số** (base đóng băng + **kho chọn lọc**) để giữ tri thức mà không quên, đo trên **ba tác vụ QA · NLI · tam đoạn luận** — soi xem retrieval cứu được task nào và **chạm trần lập luận** ở đâu. ReGrad (bán-tham số) là đối chiếu; selective memory chống "quên kiểu RAG" (kho phình → recall tụt).*
 
 ## Mạch kể 8 nhịp (deck flow)
 | # | Nhịp | File |
@@ -13,9 +13,9 @@
 | 3 | **Vì sao không parametric** — catastrophic forgetting (bằng chứng) | 02 |
 | 4 | **Ý tưởng** — hybrid: RAG (facts) + LoRA (behavior), base frozen | 01/03 |
 | 5 | **Bối cảnh & khoảng trống** — survey arc → 4 gaps | 02 |
-| 6 | **Phương pháp (đi sâu)** — kiến trúc + 3 module + data pipeline | 03 |
-| 7 | **Đánh giá & kết quả mong đợi** — baseline/metrics/threshold | 04 |
-| 8 | **Đóng góp + kế hoạch + Q&A** | 04/05 |
+| 6 | **Phương pháp (đi sâu)** — RAG là gì/ở đâu + kho chọn lọc + 4 arm (CPT/ReGrad/vanilla/selective) | 03 |
+| 7 | **Thí nghiệm & kết quả** — đường forgetting (nạp liên tục) + Δ theo task (trần lập luận) | 04 |
+| 8 | **Phát hiện + kế hoạch + Q&A** | 04/05 |
 
 ## 3 câu hỏi proposal phải trả lời (lăng kính hội đồng)
 | Câu hỏi | Trả lời ở slide |

@@ -1,5 +1,7 @@
 # Trục 1 — Selective Legal Memory (TRỤC THỰC NGHIỆM CHÍNH)
 
+> ⚠️ **REFRAME (2026-06-24):** Selective memory giờ định vị là **chống "quên kiểu RAG"** — khi kho nạp liên tục phình to → nhiễu → recall tụt; selective giữ recall sắc. Đây là **H3** trong [redirect_rag_3tasks.md](../redirect_rag_3tasks.md). Cơ chế bên dưới giữ nguyên.
+
 > Đây là phần **mới nhất** và **ít engineering nhất**. Câu hỏi cốt lõi: *có một cách "quên có chọn lọc" để **nén kho tri thức** mà **không làm tụt độ chính xác** và **không bỏ sót luật còn hiệu lực** không?*
 
 ---

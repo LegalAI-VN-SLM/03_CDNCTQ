@@ -1,5 +1,7 @@
 # Trục 3 — Unlearning Leakage: "quên" có THẬT không? (TRỤC RIGOR)
 
+> ⚠️ **HẠ CẤP (2026-06-24):** Unlearning **không còn là trục chính**. Giữ lại làm **temporal gating** (ẩn luật bị thay thế khi nạp liên tục — supersession), là phần *phụ*. Nội dung "deletion ≠ quên / đo rò rỉ" bên dưới vẫn đúng nếu sau này quay lại. Nguồn chuẩn: [redirect_rag_3tasks.md](../redirect_rag_3tasks.md).
+
 > Đây là trục trả lời thẳng phản biện: *"Xoá entry khỏi index thì RAG nào chả làm — đâu phải hướng mới?"* và *"ACL gating nằm bên code, đâu phải thực nghiệm?"*
 >
 > **Thừa nhận trước:** xoá index = code tầm thường; ACL = `if` check = code tầm thường. **Cả hai KHÔNG phải đóng góp.** Phần nghiên cứu nằm ở chỗ *deletion ≠ model thật sự quên*.

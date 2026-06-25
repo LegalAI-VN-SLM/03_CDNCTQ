@@ -42,8 +42,8 @@
 ✅ Đã ghi.
 
 ### Q8. "Baseline CPT/CFT trên luật VN tốn compute — 6 tháng + 200h A100 có thực tế không?"
-**Trả lời:** Em ưu tiên theo nấc: chạy **static-RAG baseline + selective + unlearning** trước (rẻ, vì base frozen), và CPT/CFT baseline chạy ở **quy mô nhỏ/đại diện** (mô hình nhỏ, tập con) chỉ để đo *xu hướng forgetting*, không cần full-scale. Nếu compute thiếu, CPT full là phương án mở rộng. Kế hoạch + rủi ro compute đã ghi ở Ch4.
-🔧 Nói rõ trong Ch4 rằng baseline parametric chạy *scaled-down*.
+**Trả lời:** Em ưu tiên theo nấc: chạy **static-RAG baseline + selective + unlearning** trước (rẻ, vì base frozen), và CPT/CFT baseline chạy **scaled-down cùng cỡ mô hình nhỏ (1–4B, ≤15B)** với hệ chính → so sánh công bằng, chỉ đo *xu hướng forgetting*, không cần full-scale. Base frozen ⇒ chi phí chính là index 1 lần. Nếu compute thiếu, CPT full là phương án mở rộng.
+✅ Đã ghi rõ ở 3.1 / 3.4 / 4.3: model 1–4B (≤15B), baseline parametric *scaled-down* cùng cỡ.
 
 ---
 
@@ -77,7 +77,7 @@
 | 2 | Thêm **Threats to Validity** (3.1) | ✅ đã thêm |
 | 3 | Nâng **ReGrad thành baseline đo thật** (latency+acc) | 🔧 cần cập nhật 3.1/Ch4 |
 | 4 | Câu **novelty sắc** ở 3.1 + Abstract | 🔧 nên thêm |
-| 5 | Ch4: nói baseline parametric chạy **scaled-down** | 🔧 nên thêm |
+| 5 | Ch4/3.x: baseline parametric **scaled-down**, model **1–4B (≤15B)** | ✅ đã thêm |
 | 6 | 3.3: thêm câu **log minimization** | 🔧 nên thêm |
 
 ## 3 nguyên tắc khi trả lời (đọc trước khi vào phòng)

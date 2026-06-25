@@ -1,5 +1,7 @@
 # Trục 2 — Catastrophic Forgetting: RAG+LoRA vs Parametric (TRỤC KHUNG)
 
+> ⚠️ **NÂNG THÀNH TRỤC TRUNG TÂM (2026-06-24):** mở rộng theo **kịch bản nạp-tri-thức-liên-tục** (khuôn Bảng B của ReGrad): CPT **quên thảm khốc**, RAG **né quên**, ReGrad **đối chiếu bán-tham số**, selective RAG chống tụt-recall — tất cả đo trên **QA/NLI/Syllogism**. Chi tiết: [redirect_rag_3tasks.md](../redirect_rag_3tasks.md).
+
 > Trục này **buộc thẳng vào tên đề tài** ("Continual Learning & Catastrophic Forgetting"). Nó trả lời câu hỏi trung tâm: *cách tiếp cận frozen-base + RAG có **thật sự** quên ít hơn fine-tune trọng số không — đo bằng số, không nói suông?*
 
 ---

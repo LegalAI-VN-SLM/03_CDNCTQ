@@ -1,5 +1,7 @@
 # Định vị Novelty + Hướng 2026 + Kịch bản phản biện
 
+> ⚠️ **CẬP NHẬT (2026-06-24):** Novelty giờ định vị quanh **RAG chống catastrophic forgetting khi nạp tri thức liên tục, đo trên 3 task (QA/NLI/Syllogism)**; **ReGrad** = đối chiếu bán-tham số chính (Bảng B). Selective memory = chống quên-kiểu-RAG. Xem [redirect_rag_3tasks.md](../redirect_rag_3tasks.md).
+
 > File "cầm tay khi bảo vệ" cho nhóm câu hỏi *"RAG đã có nhiều rồi, em khác gì?"*. Nguyên tắc xuyên suốt: **đổi khung — không phòng thủ "RAG của em tốt hơn", mà tái định vị RAG thành nền tảng cho continual learning + unlearning."**
 
 ---
