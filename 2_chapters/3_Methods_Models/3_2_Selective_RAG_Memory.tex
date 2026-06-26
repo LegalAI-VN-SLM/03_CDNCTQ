@@ -44,7 +44,7 @@ where $\beta$ balances semantic relevance against legal importance. The final co
 \State $M \gets \{\, u \in C : v_u = 1 \;\wedge\; \mathrm{ValidAt}(u, t_q) \;\wedge\; \mathrm{Match}(u, q) \,\}$ \Comment{compliance hard-gate}
 \State $R \gets \mathrm{Sort}\!\left(C \setminus M,\ \text{key: } \mathrm{sim}(q, e_u) + \beta\, I_u\right)$ \Comment{rerank remainder}
 \State $\mathit{ctx} \gets M \cup \mathrm{TopK}(R)$
-\State $\mathrm{LogAccess}(\mathit{ctx})$ \Comment{update $H_i$ for decay}
+\State $\mathrm{LogAccess}(\mathit{ctx})$ \Comment{update $H_u$ for decay}
 \State \Return $\mathit{ctx}$
 \end{algorithmic}
 \end{algorithm}

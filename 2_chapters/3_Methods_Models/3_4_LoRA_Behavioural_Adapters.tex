@@ -17,12 +17,12 @@ The proposed configuration is summarized in Table~\ref{tab:lora_config}. The bas
 \small
 \caption{Proposed LoRA configuration for behavioural adaptation.}
 \label{tab:lora_config}
-\begin{tabularx}{\textwidth}{l l X}
+\begin{tabularx}{\textwidth}{l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
 \hline
 \textbf{Component} & \textbf{Setting} & \textbf{Rationale} \\
 \hline
 Base model & Instruction-tuned decoder-only, frozen ($1$--$4$B, ${\le}15$B) & forgetting resistance + SFT buffer; fits low-resource budget \\
-Rank $r$ & 256 & high rank suits instruction tuning \\
+Rank $r$ & 256 & headroom for multi-task behavioural coverage \\
 Scaling $\alpha$ & 512 ($\alpha = 2r$) & standard scaling \\
 Target modules & all linear projections & full behavioural coverage \\
 Rehearsal & $\approx 0.5\%$ general Vietnamese text & preserves zero-shot ability \\

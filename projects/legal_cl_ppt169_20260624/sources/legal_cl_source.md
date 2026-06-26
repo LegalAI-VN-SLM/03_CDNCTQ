@@ -34,25 +34,26 @@
 - **Freeze base LLM** → general reasoning intact.
 - **Facts → external RAG memory** (cập nhật/unlearn = thao tác KB).
 - **Behavior → LoRA adapter** (IFT, không nhớ facts).
-- + **Selective memory** (ưu tiên điều luật quan trọng) + **unlearning gate**.
+- + **Selective memory** (ưu tiên điều luật quan trọng) + **unlearning gate** (phụ).
 
 💬 Kể: "Tách bạch: facts ra ngoài (RAG), kỹ năng lập luận vào LoRA, base giữ nguyên."
 
 ## Slide 5 — Objectives
-- **General:** non-parametric RAG continual-learning framework cho QA/suy luận luật VN, base frozen.
-- **Specific:** (1) legal importance-based **selective memory**; (2) **controllable unlearning** (P+Q); (3) **evaluation protocol** legal-CL VN.
+- **General:** dùng **RAG phi-tham số (base frozen)** chống quên thảm khốc khi nạp tri thức luật liên tục, đo trên QA/NLI/Syllogism.
+- **Specific:** (1) **xây kho RAG chọn lọc** (importance + decay + compliance — như ReGrad xây bank nhưng phi-tham số); (2) **đo forgetting khi nạp liên tục** (RAG vs CPT vs ReGrad × 3 task); (3) **soi trần lập luận** (retrieval cứu QA/NLI tới đâu, có vượt syllogism không).
 
 ## Slide 6 — Research questions & hypotheses
-- **CQ1/H1 — Selective memory:** feature importance nào (citation/risk/temporal) giảm index + giữ accuracy?
-- **CQ2/H2 — RAG vs parametric:** RAG có giảm forgetting chung + xử lý regime thời gian tốt hơn CPT/CIT? (đo bằng chuỗi tuần tự **lao động→thuế**, chỉ số Backward Transfer)
-- **CQ3/H3 — Unlearning:** P+Q quên được tới đâu mà không hại truy vấn khác?
+- **H1 — Forgetting:** CPT nạp nhiều ⇒ **quên thảm khốc** (sụp như Bảng B ReGrad). Đo: BWT, perf↓.
+- **H2 — RAG né quên:** RAG base frozen **không quên trọng số**, perf ổn định theo lượng nạp.
+- **H3 — Selective cứu RAG:** kho phình → vanilla RAG tụt recall; **selective giữ recall** (index↓≥30%, ±2%).
+- **H4 — Trần lập luận:** RAG mạnh ở **QA** > NLI > **Syllogism** (retrieval không thay được suy luận).
 
-💬 Kể: mỗi câu hỏi gắn 1 giả thuyết **bác bỏ được** → nghiên cứu nghiêm túc.
+💬 Kể: mỗi giả thuyết **bác bỏ được bằng số** → nghiên cứu nghiêm túc. Khuôn lấy từ Bảng B của ReGrad (nạp liên tục → đo quên).
 
 ## Slide 7 — Scope & contributions
-- **Scope:** luật VN (bộ luật, nghị định, thông tư, án lệ); tasks QA/NLI/reasoning; không generation dài. Framework **domain-general, không bó vào ngành nào**; **kịch bản test lấy data từ** sub-domain biến động nhiều (lao động, thuế) để dựng ca update / forgetting / unlearning.
-- **3 đóng góp:** (1) legal selective memory (mở rộng Ebbinghaus sang luật + compliance gate); (2) retrieval-level unlearning gate (P+Q); (3) benchmark/protocol legal-CL VN.
-- **💡 Significance:** *KH* — nối CL + RAG + legal temporal regimes cho low-resource VN; *thực tiễn* — trợ lý pháp lý tuân thủ, độ trễ thấp.
+- **Scope:** luật VN; **3 task QA/NLI/Syllogism**; không generation dài. Framework **domain-general**; **kịch bản nạp liên tục lấy data từ** sub-domain biến động nhiều (lao động, thuế).
+- **3 đóng góp:** (1) **kho RAG chọn lọc** chống "quên kiểu RAG"; (2) **bằng chứng định lượng** RAG né quên thảm khốc trên 3 task luật VN (đối chiếu CPT/ReGrad); (3) **phát hiện trần lập luận** — retrieval cứu QA/NLI nhưng chạm trần syllogism.
+- **💡 Significance:** *KH* — nối CL + RAG + legal reasoning cho low-resource VN; *thực tiễn* — trợ lý pháp lý cập nhật được, độ trễ thấp.
 📌 `nguyen2025vlqa...`, `duong2026vilegalnli...`, `le-etal-2025-overview`
 
 ---
@@ -90,25 +91,25 @@
 📌 `gupta2023...`, `ibrahim2024...`, `zheng-etal-2024-breaking`, `que2024dcpt...`
 
 ## Slide 5 — Semi-parametric & RAG memory/unlearning
-- **ReGrad** (gradient bank, đối chiếu): Law 84.87%, **zero weight drift** — nhưng độ trễ cao.
+- **ReGrad** (gradient bank, đối chiếu): Law 84.87%, **zero weight drift** — nhưng độ trễ cao; **Bảng B: nạp 10K → CPT sụp 27.80, ReGrad 44.05** (khuôn thí nghiệm forgetting).
 - **LUFY**: quên 90% lượt ít quan trọng → **+17% retrieval** (cảm hứng importance + decay).
 - **RAG-based unlearning** (Wang): **USR 99.8%, ROUGE-L 0.10, utility giữ 53.8%** vs gradient-ascent quên kém + hại utility.
 
-💬 Kể: "Bằng chứng mạnh nhất cho hướng RAG: unlearn gần tuyệt đối **mà không hại** năng lực khác."
+💬 Kể: "Bảng B của ReGrad = khuôn đo quên thảm khốc khi nạp liên tục — đề tài đi xa hơn với RAG thuần."
 📌 `su2026retrievablegradients...`, `Sumida_2025`, `11207222`
 
 ## Slide 6 — Vietnamese legal resources & the reasoning gap
 - **VLQA** (59k điều luật) = KB; **ViLegalNLI** (Qwen-2.5 90.72%); **LegalSLM**.
 - Phát hiện then chốt: NLI/QA ~0.95 nhưng **syllogism chỉ ~0.5–0.6**; CPT giúp 4B nhưng **hại 1.7B**.
 
-💬 Kể: "Truy xuất/phân loại tốt rồi, nhưng **lập luận tam đoạn luận còn yếu** — đây là khoảng trống."
+💬 Kể: "Truy xuất/phân loại tốt rồi, nhưng **lập luận tam đoạn luận còn yếu** — đây là khoảng trống (= hook H4)."
 📌 `nguyen2025vlqa...`, `duong2026vilegalnli...`, `le-etal-2025-overview`
 
 ## Slide 7 — Four research gaps (chốt chương → dẫn vào method)
 1. **Low-resource VN** chưa được nghiên cứu CL đầy đủ.
-2. **Controllable forgetting / right-to-be-forgotten** under-explored.
+2. **RAG chống quên thảm khốc khi nạp liên tục** chưa đo trên luật VN.
 3. **Selective legal memory** (importance đặc thù luật) chưa ai làm.
-4. Thiếu **benchmark legal-CL VN**.
+4. Thiếu **benchmark legal-CL VN** trên 3 task (đặc biệt syllogism).
 
 💬 Kể: "4 khoảng trống này = 4 lý do tồn tại của đề tài."
 
@@ -117,8 +118,8 @@
 # 03 — Proposed Methods (ĐI SÂU — phần lõi)
 
 ## Slide 1 — Core design statement (thuộc lòng)
-- **Base LLM frozen.** Facts → **non-parametric RAG**; behavior → **LoRA**; learn/forget facts = sửa KB/policy, **không đụng weight base**.
-- 3 hệ quả: (1) không weight drift / không quên chung; (2) cập nhật luật tức thì; (3) **unlearning là thao tác bậc nhất**.
+- **Base LLM frozen.** Facts → **non-parametric RAG**; behavior → **LoRA**; nạp/sửa facts = sửa KB, **không đụng weight base**.
+- 3 hệ quả: (1) **không weight drift / không quên thảm khốc** dù nạp liên tục; (2) cập nhật luật tức thì; (3) selective memory giữ recall khi kho phình.
 
 💬 Kể: "Một câu định hình cả chương: đóng băng base, tách facts ra ngoài."
 
@@ -142,48 +143,49 @@
 - **Tiers:** Active top-k / Archive (down-rank, **không xoá**).
 - **Compliance hard-gate:** $v_i{=}1$ & khớp ⇒ **luôn giữ** dù $I_i$ thấp; re-rank: $S=\mathrm{sim}+\beta I_i$.
 
-💬 Kể (góc sâu): "Forgetting ở đây là **giảm nhiễu index**, KHÔNG giảm coverage — validity là *bất biến cứng*, importance chỉ xếp hạng trong tập hợp lệ."
+💬 Kể (góc sâu): "Vai trò = **chống quên kiểu RAG**: kho nạp liên tục phình to → nhiễu → vanilla tụt recall; selective giữ recall mà validity vẫn là bất biến cứng."
 📌 cảm hứng `Sumida_2025`; Algorithm `alg:selective`
 
-## Slide 5 — Module 2: Controllable Unlearning (P+Q)
+## Slide 5 — (Phụ) Controllable Unlearning (P+Q) — temporal gating khi supersession
 - 3 loại forget: **Temporal gating** (luật hết hiệu lực, vẫn trả lời "tại 20XX") · **Access-control** (sealed, theo `acl`) · **Index deletion** (personal data).
 - **P (retrieval):** $KB_T=\{u\notin T \wedge \mathrm{Authorize}(u,q,t_q)\}$ — entry cấm không vào candidate.
 - **Q (output):** ràng buộc prompt không viện dẫn/không tiết lộ $T$ (chặn rò rỉ parametric).
 - Filter đầu ra + **immutable audit log** (giải trình pháp lý; đảo ngược được trừ hard-delete).
 
-💬 Kể (góc sâu + trung thực): "Đây là **behavioral unlearning** — đảm bảo *không truy xuất/không trích dẫn*, **không** claim xoá khỏi weight; phần rò rỉ được **đo** bằng TPR@1%FPR."
+💬 Kể (trung thực): "Đây là phần **phụ** — temporal gating gắn vào lúc nạp luật mới thay luật cũ; **behavioral unlearning**, không claim xoá khỏi weight."
 📌 `11207222` (USR 99.8%, utility giữ)
 
 ## Slide 6 — Module 3: LoRA behavioural adapter (vì sao cần)
 - Phân vai: **RAG = dùng điều luật nào; LoRA = lập luận thế nào** (syllogism: đại–tiểu tiền đề–kết luận, trích dẫn, tuân ràng buộc Q).
 - **Vì sao behavior chứ không facts:** SVD — CPT cần rank ~2000, **IFT chỉ ≤32** ⇒ LoRA (r=256) hợp IFT, không đủ nhớ facts.
-- Config: base instruct decoder-only **frozen (1–4B, ≤15B — low-resource)**, r=256/α=512, replay 0.5%, (tuỳ chọn SAM); học tuần tự **lao động→thuế** (cấu hình 2-task tối thiểu để *thấy* forgetting) → chống collision bằng O-LoRA/N-LoRA/SLIM.
+- Config: base instruct decoder-only **frozen (1–4B, ≤15B — low-resource)**, r=256/α=512, replay 0.5%, (tuỳ chọn SAM); đa-ngành tuần tự → chống collision bằng O-LoRA/N-LoRA/SLIM.
 
 💬 Kể: "LoRA dạy *cách lập luận pháp lý*, không nhồi luật vào trọng số — nên đổi luật không cần train lại."
 📌 `biderman2024loralearnsforgets`, `hu2021lora...`, `wang-etal-2023-orthogonal`, `han-etal-2025-slim`
 
 ## Slide 7 — Data methodology pipeline (FIGURE)
-- **Collection** → **Preprocessing/Indexing** (units+metadata+citation graph+embedding) → **Sampling** (topic-stratified tổng quát; **kịch bản test lấy data từ** sub-domain biến động nhiều — lao động/thuế; chuỗi tuần tự lao động→thuế đo Backward Transfer; forget↔retain matched; regime split; Scenario A/B/C) → **Analysis** (ablation ladder; metrics; test H1–H3; error analysis).
+- **Collection** → **Preprocessing/Indexing** (units+metadata+citation graph+embedding) → **Sampling** (topic-stratified tổng quát; **kịch bản nạp liên tục lấy data từ** sub-domain biến động nhiều — lao động/thuế; snapshot kho ở nhiều mức nạp; forget↔retain matched; regime split) → **Analysis** (ablation ladder; metrics; test H1–H4; error analysis).
 - Expert validate **5%** metadata (giảm rủi ro chính).
 
 💬 Kể: chỉ figure pipeline, nhấn "chọn mẫu – thu thập – phân tích" đủ bộ ba.
 📌 Figure `fig:data_pipeline` (3.1)
 
-## Slide 8 — Why hybrid RAG+LoRA, not CPT/ReGrad (đánh đổi nói thẳng)
-| Quên chung | nặng | tránh | **không (frozen)** |
-| Cập nhật luật | train lại | thêm gradient | **sửa KB tức thì** |
-| Unlearn | rất khó | khó | **gỡ entry — dễ** |
-| Độ trễ | nền | **cao** | nền+tra cứu |
-| Reasoning | trong weight | trong weight | **base+LoRA (bị chặn bởi base)** ⚠️ |
+## Slide 8 — Bốn arm khi NẠP LIÊN TỤC (khuôn Bảng B ReGrad) — đánh đổi nói thẳng
+| | CPT/CIT | ReGrad | vanilla RAG | **selective RAG (đề tài)** |
+|---|---|---|---|---|
+| Khi kho/tri thức lớn dần | **quên thảm khốc** | tránh (đắt) | không quên weight, **nhiễu↑** | **giữ recall** |
+| Cập nhật luật | train lại | thêm gradient | sửa KB | **sửa KB tức thì** |
+| Chi phí | cao | **cao** (bank) | thấp | thấp |
+| Reasoning | trong weight | trong weight | base | **base (bị chặn)** ⚠️ |
 
-💬 Kể (tạo độ tin): "Đánh đổi thật: frozen ⇒ reasoning bị chặn bởi base. Ta giảm thiểu bằng LoRA + context chất lượng, và **nêu rõ ở Limitations**."
+💬 Kể (tạo độ tin): "CPT nạp nhiều = **sụp như Bảng B**; RAG né quên nhưng kho phình thì **nhiễu** → selective cứu. Đánh đổi thật: frozen ⇒ reasoning bị chặn bởi base — **nêu rõ ở Limitations**."
 📌 Table `tab:methodology_comparison` (3.1)
 
 ## Slide 9 — Continual knowledge update (giữ retrieval luôn tươi)
 - Vì sao cần: không update ⇒ luật cũ `v=1` (sai compliance), recall tụt, citation/importance lỗi thời.
 - **Incremental pipeline:** crawl/event → upsert đơn vị mới → **supersession** (luật cũ `v=0` = temporal unlearning) → citation delta → **canary test** → commit / **rollback**.
 - **Update và unlearning là một bộ máy**; base frozen ⇒ update rẻ, **không retrain**; LoRA train lại hiếm.
-- **Future work (làm khi bắt đầu):** embedding-drift detection + crawl-scheduling/versioning (hướng C, chưa đi sâu).
+- **Future work:** embedding-drift detection + crawl-scheduling/versioning (chưa đi sâu).
 
 💬 Kể: "Đây là phần 'continual' thật sự — cập nhật ở tầng KB; và nó dùng chung cơ chế với unlearning."
 📌 Figure `fig:update_pipeline` (3.5); time-continual eval `li2025ticlm...`
@@ -192,43 +194,44 @@
 
 # 04 — Expected Outcomes & Plan
 
-## Slide 1 — Deliverables ↔ acceptance thresholds (đo được)
-- **Obj 1 — Selective memory module:** active index **giảm ≥30%** vs static RAG; **Recall@10 trong ±2%** so full-index.
-- **Obj 2 — Unlearning gate (P+Q):** **ROUGE-L ≤0.15** trên forget set; **harmlessness ≥95%** baseline; **TPR ≤1% @1%FPR** dưới jailbreak.
-- **Obj 3 — Evaluation suite:** chạy được trên **VLQA / ViLegalNLI / LegalSLM**; test scenarios **lấy data từ** sub-domain biến động nhiều (lao động, thuế); thêm eval **cross-domain tuần tự lao động→thuế** đo Backward Transfer (target near-zero factual forgetting vs parametric baseline).
+## Slide 1 — Kết quả mong đợi ↔ tiêu chí đo được
+- **R1 — Đường forgetting (nạp liên tục):** CPT **sụp** ở mức nạp cao (BWT âm, như Bảng B ReGrad); **RAG không quên** (perf ổn/tăng). Vẽ trên cả 3 task.
+- **R2 — Selective vs vanilla RAG:** kho phình → vanilla **tụt Recall@K**; selective giữ **±2%** + active index **↓≥30%**.
+- **R3 — Δ cải thiện theo task:** **QA > NLI > Syllogism** → bằng chứng **trần lập luận**. Đối chiếu **ReGrad** (bán-tham số).
+- *(Phụ)* unlearning = temporal gating khi supersession.
 
-💬 Kể: "Mỗi mục tiêu gắn ngưỡng số → nghiệm thu khách quan."
+💬 Kể: "Mỗi kết quả gắn con số đo được → nghiệm thu khách quan."
 📌 `nguyen2025vlqa...`, `duong2026vilegalnli...`, `le-etal-2025-overview`
 
-## Slide 2 — Academic & open-source outputs
-- 1 hội nghị (PACLIC/KSE/VLSP) + 1 tạp chí ISI/Scopus.
-- Hỗ trợ 1 luận văn ThS + 2 đồ án ĐH.
-- GitHub: code + eval scripts + metadata-augmented index (tái lập được).
+## Slide 2 — Academic & open-source outputs (student-scale)
+- **Hoàn thành luận văn thạc sĩ** này (đây là output chính).
+- (Phấn đấu) **1 báo cáo hội nghị/workshop trong nước** (VLSP/KSE) — không cam kết tạp chí ISI/Scopus trong 6 tháng.
+- **GitHub**: code + eval scripts + index tái lập được → đóng góp tái lập cho legal-CL VN.
 
 ## Slide 3 — Beneficiaries (Who)
 - **Cộng đồng NLP/AI pháp lý:** benchmark + metric chuẩn để so các retrieval/memory paradigm.
-- **Lập trình hệ thống pháp lý:** tái dùng selective memory + unlearning gate (giảm chi phí đảm bảo compliance).
-- **Cơ quan tuân thủ/bảo mật:** ngân hàng, toà án, công ty luật — đảm bảo không rò rỉ/không viện dẫn thông tin mật hoặc luật hết hiệu lực.
+- **Lập trình hệ thống pháp lý:** tái dùng selective memory + cơ chế cập nhật (giảm chi phí giữ tri thức tươi).
+- **Cơ quan tuân thủ/bảo mật:** ngân hàng, toà án, công ty luật — không viện dẫn luật hết hiệu lực.
 
 ## Slide 4 — Work packages & timeline (6 tháng)
-- **WP1 Selective RAG memory** (crawl/parse/index, citation graph, importance + decay) — crawl **ưu tiên** sub-domain biến động nhiều (lao động, thuế) cung cấp kịch bản test; **pipeline domain-general**.
-- **WP2 Unlearning gate** (P+Q, compliance filter, audit log).
-- **WP3 Benchmark & validation** (static-RAG baseline, ablation, VLQA/ViLegalNLI/LegalSLM).
-- 8 milestone theo tuần (corpus W3 → KB W5 → baseline W9 → modules W12 → tuning W15 → unlearning W18 → benchmark W21 → report W24).
+- **WP1 Xây kho RAG chọn lọc** (crawl/parse/index, citation graph, importance + decay, compliance gate) — crawl ưu tiên sub-domain biến động nhiều (lao động, thuế).
+- **WP2 Thí nghiệm forgetting** (nạp liên tục × 4 arm CPT/ReGrad/vanilla-RAG/selective-RAG × 3 task).
+- **WP3 Phân tích & benchmark** (đường forgetting, Δ theo độ khó task, VLQA/ViLegalNLI/LegalSLM).
+- 8 milestone theo tuần (corpus W3 → KB W5 → baseline W9 → selective W12 → continual-loading W15 → đo forgetting W18 → benchmark W21 → report W24).
 
-💬 Kể: dependency WP1→WP3, WP2→WP3.
+💬 Kể: dependency WP1→WP2→WP3.
 
 ## Slide 5 — Budget & risks
-- Tổng ~**1,25 tỷ VND (~$50k)**: nhân sự / compute (A100 thuê + workstation) / dữ liệu+expert validation / công bố.
-- **Rủi ro chính:** metadata sai (→ double-pass verify 5%); retrieval recall (→ hybrid dense+BM25); compute (→ pre-compute embedding, Bayesian search); access-control leakage (→ automated audit).
+- Tổng **~20 triệu VND (~$800)** — quy mô **đồ án sinh viên** (lương = 0): Colab Pro+ (~4,8tr) · cloud GPU RunPod/L4/4090 (~1,2tr) · thù lao SV luật tình nguyện (~4tr) · OCR API (~2,5tr) · in ấn/đi lại/workshop. *(khớp Bảng 4_4)*
+- **Rủi ro chính:** metadata sai (→ double-pass verify 5%); retrieval recall (→ hybrid dense+BM25); compute (→ pre-compute embedding, mô hình nhỏ 1–4B).
 
-💬 Kể: nhấn rủi ro metadata = rủi ro số 1, đã có biện pháp.
+💬 Kể: nhấn rủi ro metadata = rủi ro số 1; budget **student-scale**, không cần A100.
 
 ## Slide 6 — Closing (3 câu hỏi proposal phải trả lời)
-- **Why needed:** luật biến động + phải "quên có chủ đích"; parametric → quên thảm khốc / khó unlearn.
+- **Why needed:** luật biến động + nạp liên tục; parametric → **quên thảm khốc** / khó unlearn.
 - **Why now:** data VN mới (2025–2026) + quy định siết → nền thực nghiệm + nhu cầu hội tụ.
-- **Why me:** đã làm **khóa luận về RAG** (miền thông tin trường ĐH) → nắm nền tảng, nay chuyển/mở rộng sang **miền luật** (khó hơn), dưới hướng dẫn GV chuyên NLP, dùng dataset VN công khai.
-- **Value:** no factual (weight) drift + compliance-aware forgetting + reproducible protocol — novel về KH và có giá trị thực tiễn cho legal-AI VN.
+- **Why me:** đã làm **khóa luận về RAG** (miền thông tin trường ĐH) → nắm nền tảng, nay chuyển sang **miền luật** (khó hơn), dưới hướng dẫn GV chuyên NLP, dùng dataset VN công khai.
+- **Value:** no factual (weight) drift + bằng chứng RAG né quên trên 3 task + reproducible protocol — novel về KH và giá trị thực tiễn cho legal-AI VN.
 
 💬 Kể: slide chốt — đọc 4 gạch này là hội đồng nắm trọn giá trị + thấy bạn đủ năng lực.
 🔖 Liêm chính: AI chỉ hỗ trợ tìm/cấu trúc/ngôn ngữ; ý tưởng + framework + phân tích là của tác giả (xem Declaration).
@@ -237,16 +240,16 @@
 
 # 05 — Talking Points & Anticipated Q&A
 
-## Slide 1 — Anticipated Q&A 1: "RAG đã có rồi — xoá index đâu phải mới? Phần nào là nghiên cứu?"
-- Không claim RAG mới. Xoá index/ACL/audit = **code, không nhận là đóng góp**.
-- Temporal phải **giữ-mà-chặn**; xoá thật thì model **vẫn lộ từ trọng số** → em **đo rò rỉ**.
-- Nghiên cứu = 3 câu hỏi bác bỏ được: nén index (H1) · forgetting (H2) · leakage (H3).
+## Slide 1 — Anticipated Q&A 1: "RAG đã có rồi — em nghiên cứu gì mới?"
+- Không claim thuật toán RAG mới. Đóng góp = **đo RAG chống quên thảm khốc khi nạp liên tục** trên luật VN (chưa ai làm) — khuôn từ Bảng B ReGrad nhưng phi-tham số.
+- **Selective RAG** chống "quên kiểu RAG" (kho phình → recall tụt) — cái vanilla RAG không xử được.
+- Hook: **retrieval cứu QA/NLI nhưng chạm trần ở syllogism** (H4) — bác bỏ được bằng số.
 
-💬 Kể: "Xóa index hay ACL chỉ là code. Điểm nghiên cứu là đo và chặn rò rỉ parametric thông qua khung unlearning P+Q."
+💬 Kể: "Cái mới không phải thuật toán RAG, mà là **bằng chứng định lượng** RAG né forgetting trên 3 task luật VN + phát hiện trần lập luận."
 
 ## Slide 2 — Anticipated Q&A 2: "Model nhỏ 1–4B đủ suy luận luật không? 6 tháng kịp không?"
 - Em **không đặt cược vào suy luận của base** — facts ở ngoài nên không cần model lớn (đúng luận điểm).
 - Baseline parametric chạy **cùng cỡ nhỏ** ⇒ chênh lệch do **cơ chế**, không do model.
-- Khả thi 6 tháng: base frozen, kịch bản test tập trung sub-domain biến động nhiều.
+- Khả thi 6 tháng: base frozen, kịch bản nạp liên tục tập trung sub-domain biến động nhiều; budget student-scale (~20tr).
 
 💬 Kể: "Facts để ngoài RAG giúp giảm tải cho trọng số, dùng model 1-4B vẫn khả thi và tiết kiệm compute."

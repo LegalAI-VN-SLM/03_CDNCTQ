@@ -21,7 +21,7 @@ New or amended legal documents are ingested both on a schedule (periodic crawlin
 \node[pipelineStep, below=of ing] (sup) {Supersession: old unit $v{=}0$, $t_{\text{end}}$, link};
 \node[pipelineStep, below=of sup] (cg) {Citation-graph delta $\to$ recompute $c_i$ (local)};
 \node[dec, below=of cg] (canary) {Canary set pass?};
-\node[good, left=of canary] (commit) {Commit KB version $v_{N+1}$};
+\node[good, left=of canary] (commit) {Commit KB version $\mathrm{ver}_{N+1}$};
 \node[bad, right=of canary] (rollback) {Rollback + alert};
 \draw[arr] (n)--(ing); \draw[arr] (ing)--(sup); \draw[arr] (sup)--(cg); \draw[arr] (cg)--(canary);
 \draw[arr] (canary) -- node[above,font=\scriptsize]{yes} (commit);

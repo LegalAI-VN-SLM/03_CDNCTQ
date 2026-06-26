@@ -52,6 +52,7 @@
 → **Incremental Update Pipeline**: crawl/event → upsert đơn vị mới → **supersession** (luật cũ `v=0`, = temporal unlearning) → citation-graph delta → **canary test** → commit/rollback, có versioning + audit. Base frozen ⇒ update rẻ, không retrain. **Phần embedding-drift detection + crawl/versioning là future work làm khi bắt đầu triển khai** (chưa đi sâu).
 
 ## Nếu kết quả NULL (trưởng thành nghiên cứu)
-- H1 null → importance chưa đủ tín hiệu (hướng feature mới).
-- H2 cho thấy RAG kém legal-acc → khẳng định đánh đổi "learns less" → hybrid future work.
-- H3 robustness yếu → định lượng giới hạn retrieval-level unlearning (đóng góp cảnh báo).
+- **H1 null** (CPT *không* quên thảm khốc ở quy mô nhỏ) → vẫn giá trị: cho thấy ranh giới forgetting phụ thuộc quy mô model/lượng nạp; parametric vẫn dùng được ở low-resource.
+- **H2 null** (frozen-RAG cũng tụt khi kho phình, hoặc kém legal-acc tuyệt đối do base frozen) → lộ ranh giới RAG + đánh đổi "learns less" → biện luận cho hybrid future work.
+- **H3 null** (selective *không* cứu được recall) → importance/decay chưa đủ tín hiệu → hướng feature mới (embedding-cluster, query-log mining). Báo cáo trung thực.
+- **H4** (nếu retrieval cứu được cả syllogism) → tốt ngoài kỳ vọng; nếu không → khẳng định **trần lập luận** của base nhỏ/frozen (đóng góp cảnh báo).

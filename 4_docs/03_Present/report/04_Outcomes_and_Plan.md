@@ -9,10 +9,10 @@
 💬 Kể: "Mỗi mục tiêu gắn ngưỡng số → nghiệm thu khách quan."
 📌 `nguyen2025vlqa...`, `duong2026vilegalnli...`, `le-etal-2025-overview`
 
-## Slide 2 — Academic & open-source outputs
-- 1 hội nghị (PACLIC/KSE/VLSP) + 1 tạp chí ISI/Scopus.
-- Hỗ trợ 1 luận văn ThS + 2 đồ án ĐH.
-- GitHub: code + eval scripts + metadata-augmented index (tái lập được).
+## Slide 2 — Academic & open-source outputs (student-scale)
+- **Hoàn thành luận văn thạc sĩ** này (đây là output chính).
+- (Phấn đấu) **1 báo cáo hội nghị/workshop trong nước** (VLSP/KSE) — không cam kết tạp chí ISI/Scopus trong 6 tháng.
+- **GitHub**: code + eval scripts + index tái lập được → đóng góp tái lập cho legal-CL VN.
 
 ## Slide 3 — Beneficiaries (Who)
 - **Cộng đồng NLP/AI pháp lý:** benchmark + metric chuẩn để so các retrieval/memory paradigm.
@@ -20,18 +20,18 @@
 - **Cơ quan tuân thủ/bảo mật:** ngân hàng, toà án, công ty luật — đảm bảo không rò rỉ/không viện dẫn thông tin mật hoặc luật hết hiệu lực.
 
 ## Slide 4 — Work packages & timeline (6 tháng)
-- **WP1 Selective RAG memory** (crawl/parse/index, citation graph, importance + decay) — crawl **ưu tiên** sub-domain biến động nhiều (lao động, thuế) cung cấp kịch bản test; **pipeline domain-general**.
-- **WP2 Unlearning gate** (P+Q, compliance filter, audit log).
-- **WP3 Benchmark & validation** (static-RAG baseline, ablation, VLQA/ViLegalNLI/LegalSLM).
-- 8 milestone theo tuần (corpus W3 → KB W5 → baseline W9 → modules W12 → tuning W15 → unlearning W18 → benchmark W21 → report W24).
+- **WP1 Xây kho RAG chọn lọc** (crawl/parse/index, citation graph, importance + decay, compliance gate) — crawl ưu tiên sub-domain biến động nhiều (lao động, thuế).
+- **WP2 Thí nghiệm forgetting** (nạp liên tục × 4 arm CPT/ReGrad/vanilla-RAG/selective-RAG × 3 task).
+- **WP3 Phân tích & benchmark** (đường forgetting, Δ theo độ khó task, VLQA/ViLegalNLI/LegalSLM).
+- 8 milestone theo tuần (corpus W3 → KB W5 → baseline W9 → selective W12 → continual-loading W15 → đo forgetting W18 → benchmark W21 → report W24).
 
 💬 Kể: dependency WP1→WP3, WP2→WP3.
 
 ## Slide 5 — Budget & risks
-- Tổng ~**1,25 tỷ VND (~$50k)**: nhân sự / compute (A100 thuê + workstation) / dữ liệu+expert validation / công bố.
-- **Rủi ro chính:** metadata sai (→ double-pass verify 5%); retrieval recall (→ hybrid dense+BM25); compute (→ pre-compute embedding, Bayesian search); access-control leakage (→ automated audit).
+- Tổng **~20 triệu VND (~$800)** — quy mô **đồ án sinh viên** (lương = 0): Colab Pro+ (~4,8tr) · cloud GPU RunPod/L4/4090 (~1,2tr) · thù lao SV luật tình nguyện (~4tr) · OCR API (~2,5tr) · in ấn/đi lại/workshop. *(khớp Bảng 4_4)*
+- **Rủi ro chính:** metadata sai (→ double-pass verify 5%); retrieval recall (→ hybrid dense+BM25); compute (→ pre-compute embedding, mô hình nhỏ 1–4B).
 
-💬 Kể: nhấn rủi ro metadata = rủi ro số 1, đã có biện pháp.
+💬 Kể: nhấn rủi ro metadata = rủi ro số 1; budget **student-scale**, không cần A100.
 
 ## Slide 6 — Closing (3 câu hỏi proposal phải trả lời)
 - **Why needed:** luật biến động + phải "quên có chủ đích"; parametric → quên thảm khốc / khó unlearn.
