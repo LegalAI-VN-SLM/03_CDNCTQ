@@ -40,11 +40,11 @@ By coupling non-parametric retrieval exclusion ($P$) with parametric generation 
 To handle potential context leakage or jailbreak attempts, the framework incorporates an online output compliance filter and an offline auditing log:
 \begin{itemize}
     \item \textbf{Privacy Compliance Filter:} A lightweight semantic classifier scans the generated output text. If the response contains exact citations or semantic concepts belonging to the forget set $T$, the response is blocked, and a generic compliance disclaimer is displayed.
-    \item \textbf{Immutable Audit Log:} All unlearning requests, modifications to $KB_T$, and retrieval audit trails are recorded chronologically:
+    \item \textbf{Immutable Audit Log (with data minimization):} All unlearning requests, modifications to $KB_T$, and retrieval audit trails are recorded chronologically:
     \begin{equation}
-        \text{Log} = \langle \text{Timestamp}, \text{QueryID}, \text{Action}, T, \text{Status} \rangle
+        \text{Log} = \langle \text{Timestamp}, \text{QueryID}, \text{Action}, \text{ref}(T), \text{Status} \rangle
     \end{equation}
-    This log serves as legal proof of compliance for regulatory audits.
+    To avoid the privacy paradox of the right-to-be-forgotten---where the audit trail could itself retain deleted content---the log applies \emph{data minimization}: it stores only operational metadata and a non-reversible reference $\text{ref}(T)$ (e.g.\ a salted hash of the target identifier), never the raw deleted text. This serves as legal proof of compliance for regulatory audits while honouring the deletion request itself.
 \end{itemize}
 
 \subsection{Evaluation Criteria and Quantitative Metrics}

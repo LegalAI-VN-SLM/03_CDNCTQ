@@ -24,6 +24,7 @@ updated:
 *   [Q6. "Importance score là tổng tuyến tính có trọng số — học/validate thế nào để không circular? Có ground truth không?"](#Q6)
 *   [Q7. "VLQA vừa là KB truy xuất vừa là tập test — chống contamination/rò rỉ thế nào?"](#Q7)
 *   [Q8. "Baseline CPT/CFT trên luật VN tốn compute — 6 tháng + 200h A100 có thực tế không?"](#Q8)
+*   [QB. (THIẾT KẾ DATA) "Bộ benchmark cho RAG đặc thù này thiết kế thế nào? Vì sao RAG thường không đủ?"](#QB)
 
 ## 📌 Nhóm 4 — Miền tri thức Luật Việt Nam
 *   [Q9. (CRITICAL) "Làm sao xác định & cập nhật hiệu lực cho toàn bộ kho luật VN đáng tin? Sai metadata thì cả hệ sụp."](#Q9)
@@ -136,6 +137,55 @@ Cổng quên trong đề cương này **chính là một màng lọc bảo mật
 
 **Trả lời:** Em ưu tiên theo nấc: chạy **static-RAG baseline + selective + unlearning** trước (rẻ, vì base frozen), và CPT/CFT baseline chạy **scaled-down cùng cỡ mô hình nhỏ (1–4B, ≤15B)** với hệ chính → so sánh công bằng, chỉ đo *xu hướng forgetting*, không cần full-scale. Base frozen ⇒ chi phí chính là index 1 lần. Nếu compute thiếu, CPT full là phương án mở rộng.
 ✅ Đã ghi rõ ở 3.1 / 3.4 / 4.3: model 1–4B (≤15B), baseline parametric *scaled-down* cùng cỡ.
+
+---
+
+## NHÓM 3B — Thiết kế bộ benchmark cho RAG ĐẶC THÙ (không phải RAG thường)
+
+### QB
+**QB. "Bộ dữ liệu/benchmark cho hệ RAG này được thiết kế thế nào? Vì sao benchmark RAG thông thường (query–passage–answer) không đủ?"**
+
+**Trả lời ngắn:** RAG ở đây **không phải RAG thường** — nó có **metadata hiệu lực/thời gian/trích dẫn/quyền**, chạy dưới **nạp tri thức liên tục**, và phải đo **quên (BWT) · đúng theo thời gian · selective recall · rò rỉ unlearning**. Benchmark RAG thường chỉ có `(câu hỏi → đoạn liên quan → đáp án)` và đo Recall@K + accuracy — **thiếu trục thời gian, nhãn hiệu lực và lịch nạp**. Vì vậy bộ benchmark của em gồm **5 lớp**:
+
+**Lớp 1 — KB có metadata + chuỗi *supersession* (không chỉ text+vector).**
+- Mỗi đơn vị `⟨e, v, [t_start,t_end], c, ρ, H, acl⟩`.
+- Khác cốt lõi so với RAG thường: **chuỗi thay thế** (luật A bị luật B thay, *kèm ngày*) + **citation graph có nhãn** → để dựng được tình huống "trước/sau khi sửa luật".
+
+**Lớp 2 — Truy vấn gắn mốc thời gian `t_q`.**
+- Mỗi câu hỏi gắn `t_q`; **đáp án đúng phụ thuộc thời điểm** (vd "lương tối thiểu vùng I" tại `t_q=2020` ≠ `2024`).
+- 3 task: **QA** (VLQA) · **NLI** (ViLegalNLI) · **Syllogism** (LegalSLM); mỗi mục có **gold answer + gold supporting units + `valid-at(t_q)`**.
+
+**Lớp 3 — Lịch nạp liên tục (continual-ingestion schedule).**
+- Sắp đơn vị theo **thứ tự thời gian ban hành**, chụp **snapshot 25 / 50 / 75 / 100%**.
+- Sau mỗi mức nạp **đo lại task cũ** → tính **Backward Transfer (BWT)**. *(Đây là thứ benchmark RAG tĩnh không có.)*
+
+**Lớp 4 — Cặp Forget ↔ Retain (matched) + probe rò rỉ.**
+- Forget set (luật bãi bỏ / án niêm phong / personal data) ghép Retain set **cùng chủ đề & kích thước**.
+- Probe 2 kiểu: **hỏi trực tiếp** và **hỏi bắc cầu (associative)** → đo **USR, ROUGE-L↓, TPR@1%FPR**, harmlessness trên retain.
+
+**Lớp 5 — Cặp regime thời gian + selective-stress.**
+- **Temporal pair:** cùng câu hỏi, `t_q` trước vs sau ngày sửa → 2 đáp án khác nhau → đo **temporal correctness**.
+- **Selective-stress:** bơm nhiễu cho kho phình to → đo **recall selective vs vanilla + kích thước index** (chính là H3).
+
+**Cách xây (protocol):**
+- *Nguồn:* cổng CP/công báo, ưu tiên **lao động & thuế** (biến động nhiều → nhiều ca update/unlearn/forget tự nhiên).
+- *Gắn nhãn hiệu lực:* **lấy trực tiếp từ văn bản** (điều khoản hết hiệu lực/thay thế), **LLM tự kiểm + spot-check 5%**, có **canary regression** sau mỗi cập nhật.
+- *Sinh câu hỏi:* tái dùng VLQA/ViLegalNLI/LegalSLM + **bổ sung câu hỏi temporal & forget-probe** (đây là phần *mới* của benchmark).
+- *Tái lập:* mỗi snapshot = **1 phiên bản KB versioned**; đóng gói GitHub (KB + eval scripts).
+- *Chống nhiễm:* decontaminate train/dev/test; recall báo cáo trên **truy vấn held-out** (nối Q7).
+
+**Metric theo từng lớp:**
+
+| Lớp | Đo cái gì | Metric |
+|---|---|---|
+| KB / retrieval | tìm đúng đơn vị | Recall@K, MRR@10 |
+| Nạp liên tục | quên | BWT, perf theo mức nạp |
+| Temporal | đúng theo `t_q` | % temporal-correct |
+| Selective | giữ recall khi kho phình | Recall@K, kích thước index |
+| Unlearning | quên có chủ đích | USR, ROUGE-L↓, TPR@1%FPR |
+
+**🎤 Câu chốt:** *"Đóng góp benchmark không phải 'thêm một tập QA', mà là **bộ dữ liệu có trục thời gian + nhãn hiệu lực + lịch nạp liên tục + cặp forget/retain** — đúng những thứ cần để đo quên / temporal / selective / unlearning mà benchmark RAG thường thiếu hoàn toàn."*
+🔧 Nên đưa phần này thành một tiểu mục trong Ch3 (Data Methodology) + Ch4 (Benchmark), không chỉ nằm trong sổ tay Q&A.
 
 ---
 
